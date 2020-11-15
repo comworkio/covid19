@@ -6,10 +6,11 @@ Then you'll be able to make some dashboards and graphs on [Kibana](https://www.e
 
 ## Needed dependancies:
 
-* bash
+* bash >= 4
 * coreutils
 * jq
 * getopt
+* curl
 * cron
 
 ## Keep the data up to date
@@ -23,7 +24,17 @@ You need to add a crontab to keep the data up to date once per day:
 ## Datasources
 
 * www.coronavirus-statistiques.com: world stats
-* www.data.gouv.fr: for the french stats
+* www.data.gouv.fr: for the French stats
+
+## Data types
+
+* vplace : geographical place (country, continent, region, department, etc)
+* vcode : kind of geographical place (country, continent, region, department, etc)
+* vcases : number of positive cases or new hospitalization (depanding of the datasource)
+* vdeath : number of death
+* vrecover : number of recover or people that went back to their home after hospitalization
+* vrea : number of people in intensive care
+* source : the source of the data (governments, wikipedia, etc)
 
 ## Git repo
 
@@ -43,3 +54,5 @@ So the commit comments are automatic messages.
 ![d3](images/3.jpg)
 
 ![d4](images/4.jpg)
+
+![d5](images/5.jpg)
