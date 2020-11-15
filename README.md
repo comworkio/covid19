@@ -43,7 +43,7 @@ All the data are converted to a JSON document that will be indexed and contains 
 * Main repo: https://gitlab.comwork.io/oss/covid19
 * Github mirror repo: https://github.com/idrissneumann/covid19
 
-Both are automatically update from a private repo that also handle automatic deployment on our infrastructure.
+Both are automatically kept up to date from a private repo that also handle automatic deployment on our infrastructure.
 
 So the commit comments are automatic messages.
 
