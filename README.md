@@ -23,8 +23,8 @@ Examples using Kibana:
 
 ## Datasources
 
-* www.coronavirus-statistiques.com : world stats
-* www.data.gouv.fr : for the french stats
+* www.coronavirus-statistiques.com: world stats
+* www.data.gouv.fr: for the french stats
 
 ## Git repo
 
