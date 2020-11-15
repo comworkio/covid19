@@ -28,13 +28,15 @@ You need to add a crontab to keep the data up to date once per day:
 
 ## Data types
 
-* vplace : geographical place (country, continent, region, department, etc)
-* vcode : kind of geographical place (country, continent, region, department, etc)
-* vcases : number of positive cases or new hospitalization (depanding of the datasource)
-* vdeath : number of death
-* vrecover : number of recover or people that went back to their home after hospitalization
-* vrea : number of people in intensive care
-* source : the source of the data (governments, wikipedia, etc)
+All the data are converted to a JSON document that will be indexed and contains some of the following fields:
+
+* `vplace`: geographical place (country, continent, region, department, etc)
+* `vcode`: kind of geographical place (country, continent, region, department, etc)
+* `vcases`: number of positive cases or new hospitalization (depanding of the datasource)
+* `vdeath`: number of death
+* `vrecover`: number of recover or people that went back to their home after hospitalization
+* `vrea`: number of people in intensive care
+* `source`: the source of the data (governments, wikipedia, etc)
 
 ## Git repo
 
