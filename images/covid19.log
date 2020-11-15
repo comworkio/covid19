@@ -1,0 +1,30 @@
+Sun Nov 15 19:18:29 UTC 2020
+  % Total    % Received % Xferd  Average Speed   Time    Time     Time  Current
+                                 Dload  Upload   Total   Spent    Left  Speed
+  0     0    0     0    0     0      0      0 --:--:-- --:--:-- --:--:--     0  % Total    % Received % Xferd  Average Speed   Time    Time     Time  Current
+                                 Dload  Upload   Total   Spent    Left  Speed
+  0     0    0     0    0     0      0      0 --:--:-- --:--:-- --:--:--     0  1 3400k    1 58095    0     0  93100      0  0:00:37 --:--:--  0:00:37 92952100   344  100   219  100   125   1469    838 --:--:-- --:--:-- --:--:--  2293100   344  100   219  100   125   1469    838 --:--:-- --:--:-- --:--:--  2293
+{"_index":"covid19-2020-02","_type":"_doc","_id":"MjAyMC0wMi0yMVAxZnJhbmNlU2FudMOpIFB1YmxpcXVlIEZyYW5jZQo","_version":7,"result":"updated","_shards":{"total":2,"successful":2,"failed":0},"_seq_no":363,"_primary_term":1}  % Total    % Received % Xferd  Average Speed   Time    Time     Time  Current
+                                 Dload  Upload   Total   Spent    Left  Speed
+  0     0    0     0    0     0      0      0 --:--:-- --:--:-- --:--:--     0100   344  100   219  100   125   2607   1488 --:--:-- --:--:-- --:--:--  4095
+{"_index":"covid19-2020-02","_type":"_doc","_id":"MjAyMC0wMi0yMlAxZnJhbmNlU2FudMOpIFB1YmxpcXVlIEZyYW5jZQo","_version":6,"result":"updated","_shards":{"total":2,"successful":2,"failed":0},"_seq_no":364,"_primary_term":1}  % Total    % Received % Xferd  Average Speed   Time    Time     Time  Current
+                                 Dload  Upload   Total   Spent    Left  Speed
+  0     0    0     0    0     0      0      0 --:--:-- --:--:-- --:--:--     0100   344  100   219  100   125   1840   1050 --:--:-- --:--:-- --:--:--  2890
+{"_index":"covid19-2020-02","_type":"_doc","_id":"MjAyMC0wMi0yM1AxZnJhbmNlU2FudMOpIFB1YmxpcXVlIEZyYW5jZQo","_version":6,"result":"updated","_shards":{"total":2,"successful":2,"failed":0},"_seq_no":365,"_primary_term":1}  % Total    % Received % Xferd  Average Speed   Time    Time     Time  Current
+                                 Dload  Upload   Total   Spent    Left  Speed
+  0     0    0     0    0     0      0      0 --:--:-- --:--:-- --:--:--     0100   344  100   219  100   125   1646    939 --:--:-- --:--:-- --:--:--  2586
+{"_index":"covid19-2020-02","_type":"_doc","_id":"MjAyMC0wMi0yNFAxZnJhbmNlU2FudMOpIFB1YmxpcXVlIEZyYW5jZQo","_version":6,"result":"updated","_shards":{"total":2,"successful":2,"failed":0},"_seq_no":366,"_primary_term":1}  % Total    % Received % Xferd  Average Speed   Time    Time     Time  Current
+                                 Dload  Upload   Total   Spent    Left  Speed
+  0     0    0     0    0     0      0      0 --:--:-- --:--:-- --:--:--     0100   344  100   219  100   125   1921   1096 --:--:-- --:--:-- --:--:--  3017
+{"_index":"covid19-2020-02","_type":"_doc","_id":"MjAyMC0wMi0yNVAxZnJhbmNlU2FudMOpIFB1YmxpcXVlIEZyYW5jZQo","_version":6,"result":"updated","_shards":{"total":2,"successful":2,"failed":0},"_seq_no":367,"_primary_term":1}  % Total    % Received % Xferd  Average Speed   Time    Time     Time  Current
+                                 Dload  Upload   Total   Spent    Left  Speed
+  0     0    0     0    0     0      0      0 --:--:-- --:--:-- --:--:--     0100   344  100   219  100   125   1904   1086 --:--:-- --:--:-- --:--:--  2991
+{"_index":"covid19-2020-02","_type":"_doc","_id":"MjAyMC0wMi0yNlAxZnJhbmNlU2FudMOpIFB1YmxpcXVlIEZyYW5jZQo","_version":6,"result":"updated","_shards":{"total":2,"successful":2,"failed":0},"_seq_no":368,"_primary_term":1}  % Total    % Received % Xferd  Average Speed   Time    Time     Time  Current
+                                 Dload  Upload   Total   Spent    Left  Speed
+  0     0    0     0    0     0      0      0 --:--:-- --:--:-- --:--:--     0100   344  100   219  100   125   2576   1470 --:--:-- --:--:-- --:--:--  4047
+{"_index":"covid19-2020-02","_type":"_doc","_id":"MjAyMC0wMi0yN1AxZnJhbmNlU2FudMOpIFB1YmxpcXVlIEZyYW5jZQo","_version":6,"result":"updated","_shards":{"total":2,"successful":2,"failed":0},"_seq_no":369,"_primary_term":1}  % Total    % Received % Xferd  Average Speed   Time    Time     Time  Current
+                                 Dload  Upload   Total   Spent    Left  Speed
+  0     0    0     0    0     0      0      0 --:--:-- --:--:-- --:--:--     0100   344  100   219  100   125   1394    796 --:--:-- --:--:-- --:--:--  2177100   344  100   219  100   125   1394    796 --:--:-- --:--:-- --:--:--  2177
+{"_index":"covid19-2020-02","_type":"_doc","_id":"MjAyMC0wMi0yOFAxZnJhbmNlU2FudMOpIFB1YmxpcXVlIEZyYW5jZQo","_version":6,"result":"updated","_shards":{"total":2,"successful":2,"failed":0},"_seq_no":370,"_primary_term":1}  % Total    % Received % Xferd  Average Speed   Time    Time     Time  Current
+                                 Dload  Upload   Total   Spent    Left  Speed
+  0     0    0     0    0     0      0      0 --:--:-- --:--:-- --:--:--     0
