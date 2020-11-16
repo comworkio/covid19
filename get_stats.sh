@@ -49,8 +49,8 @@ hash_id() {
 get_usecase_prefix() {
   ext=""
   prefix=""
-  [[ $1 ]] && prefix="gouvfr-"
-  [[ $1 && $1 != "gouvfr" ]] && ext="-${1}"
+  [[ $1 && $1 != "null" ]] && prefix="gouvfr-"
+  [[ $1 && $1 != "null" && $1 != "gouvfr" ]] && ext="-${1}"
   echo "${prefix}covid19${ext}"
 }
 
@@ -59,7 +59,7 @@ get_log_file_name() {
 }
 
 get_indice_name() {
-  echo "$(get_log_file_name ${1})-$(format_year_month ${2})"
+  echo "$(get_usecase_prefix ${1})-$(format_year_month $(echo "${2}"|jq -r '.vdate'))"
 }
 
 start_log() {
@@ -80,7 +80,7 @@ push_document() {
   log_file=$(get_log_file_name "${usecase}")
   id=$(hash_id "${json}" "${jsonquery}")
 
-  indice_url="${ELASTIC_URL}/$(get_indice_name ${usecase} ${vdate})/_doc/${id}"
+  indice_url="${ELASTIC_URL}/$(get_indice_name "${usecase}" "${json}")/_doc/${id}"
   if [[ $(format $vdate) != "null" ]]; then
     curl "${indice_url}" -u "${ELASTIC_USERNAME}:${ELASTIC_PASSWORD}" -X PUT -d "${json}" -H "Content-Type: application/json" >> "${log_file}" 2>>"${log_file}"
   fi
@@ -92,7 +92,7 @@ ingest_data() {
   curl "${DATA_STREAM}" 2>>$(get_log_file_name)|while IFS=';' read vdate vcode vplace vcases vdeath vrecover vsource trash; do
     if [[ $i -gt 0 ]]; then
       json="{\"vdate\":\"$(format $vdate)\",\"vcode\":\"$(format $vcode)\",\"vplace\":\"$(format $vplace)\",\"vcases\":$(format_number $vcases),\"vdeath\":$(format_number $vdeath),\"vrecover\":$(format_number $vrecover),\"vsource\":\"$(format "$vsource")\"}"
-      push_document "${json}" "${vdate}" '.vdate+.vcode+.vplace+.vsource'
+      push_document "${json}" '.vdate+.vcode+.vplace+.vsource'
     fi
     (( i++ ))
   done
@@ -106,7 +106,7 @@ ingest_data_fr_hostpital() {
   curl -L "${DATA_STREAM_FR_HOSPITAL}" 2>>$(get_log_file_name "${usecase}")|while IFS=';' read vplace vgender vdate vcases vrea vrad vdc trash; do
     if [[ $i -gt 0 ]]; then
       json="{\"vdate\":\"$(format $vdate)\",\"vgender\":$(format_number $vgender),\"vplace\":\"$(format $vplace)\",\"vcases\":$(format_number $vcases),\"vrea\":$(format_number $vrea),\"vrecover\":$(format_number $vrad),\"vdeath\":$(format_number "$vdc"),\"vsource\":\"www.data.gouv.fr\"}"
-      push_document "${json}" "${vdate}" '.vdate+(.vgender|tostring)+.vplace+.vsource' "${usecase}"
+      push_document "${json}" '.vdate+(.vgender|tostring)+.vplace+.vsource' "${usecase}"
     fi
     (( i++ ))
   done
@@ -120,7 +120,7 @@ ingest_data_fr_hostpital_new() {
   curl -L "${DATA_STREAM_FR_HOSPITAL_NEW}" 2>>$(get_log_file_name "${usecase}")|while IFS=';' read vplace vdate vcases vrea vdc vrad trash; do
     if [[ $i -gt 0 ]]; then
       json="{\"vdate\":\"$(format $vdate)\",\"vplace\":\"$(format $vplace)\",\"vcases\":$(format_number $vcases),\"vrea\":$(format_number $vrea),\"vrecover\":$(format_number $vrad),\"vdeath\":$(format_number "$vdc"),\"vsource\":\"www.data.gouv.fr\"}"
-      push_document "${json}" "${vdate}" '.vdate+.vplace+.vsource' "${usecase}"
+      push_document "${json}" '.vdate+.vplace+.vsource' "${usecase}"
     fi
     (( i++ ))
   done
@@ -134,7 +134,7 @@ ingest_data_fr_hostpital_age() {
   curl -L "${DATA_STREAM_FR_HOSPITAL_AGE}" 2>>$(get_log_file_name "${usecase}")|while IFS=';' read vplace vage vdate vcases vrea vrad vdc trash; do
     if [[ $i -gt 0 ]]; then
       json="{\"vdate\":\"$(format $vdate)\",\"vplace\":\"$(format $vplace)\",\"vage\":$(format_number $vage),\"vcases\":$(format_number $vcases),\"vrea\":$(format_number $vrea),\"vrecover\":$(format_number $vrad),\"vdeath\":$(format_number "$vdc"),\"vsource\":\"www.data.gouv.fr\"}"
-      push_document "${json}" "${vdate}" '.vdate+(.vage|tostring)+.vplace+.vsource' "${usecase}"
+      push_document "${json}" '.vdate+(.vage|tostring)+.vplace+.vsource' "${usecase}"
     fi
     (( i++ ))
   done
@@ -148,7 +148,7 @@ ingest_data_fr_hostpital_ets() {
   curl -L "${DATA_STREAM_FR_HOSPITAL_ETS}" 2>>$(get_log_file_name "${usecase}")|while IFS=';' read vplace vdate vcases trash; do
     if [[ $i -gt 0 ]]; then
       json="{\"vdate\":\"$(format $vdate)\",\"vplace\":\"$(format $vplace)\",\"vcases\":$(format_number $vcases),\"vsource\":\"www.data.gouv.fr\"}"
-      push_document "${json}" "${vdate}" '.vdate+.vplace+.vsource' "${usecase}"
+      push_document "${json}" '.vdate+.vplace+.vsource' "${usecase}"
     fi
     (( i++ ))
   done
