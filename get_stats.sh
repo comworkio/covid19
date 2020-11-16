@@ -5,9 +5,9 @@ DATA_STREAM_FR_HOSPITAL="https://www.data.gouv.fr/fr/datasets/r/63352e38-d353-4b
 DATA_STREAM_FR_HOSPITAL_NEW="https://www.data.gouv.fr/fr/datasets/r/6fadff46-9efd-4c53-942a-54aca783c30c"
 DATA_STREAM_FR_HOSPITAL_AGE="https://www.data.gouv.fr/fr/datasets/r/08c18e08-6780-452d-9b8c-ae244ad529b3"
 DATA_STREAM_FR_HOSPITAL_ETS="https://www.data.gouv.fr/fr/datasets/r/41b9bd2a-b5b6-4271-8878-e45a8902ef00"
-ELASTIC_URL="to_replace"
-ELASTIC_USERNAME="to_replace"
-ELASTIC_PASSWORD="to_replace"
+ELASTIC_URL="changeit"
+ELASTIC_USERNAME="changeit"
+ELASTIC_PASSWORD="changeit"
 
 error() {
     echo "Error : invalid parameter !" >&2
@@ -54,6 +54,10 @@ hash_id_fr_hostpital_new() {
 
 hash_id_fr_hostpital_age() {
   echo "${1}"|jq -r '.vdate+(.vage|tostring)+.vplace+.vsource'|base64|tr -d '='
+}
+
+hash_id_fr_hostpital_ets() {
+  echo "${1}"|jq -r '.vdate+.vplace+.vsource'|base64|tr -d '='
 }
 
 ingest_data() {
@@ -130,10 +134,6 @@ ingest_data_fr_hostpital_age() {
     (( i++ ))
   done
   date >> "${LOG_FILE}"
-}
-
-hash_id_fr_hostpital_ets() {
-  echo "${1}"|jq -r '.vdate+.vplace+.vsource'|base64|tr -d '='
 }
 
 ingest_data_fr_hostpital_ets() {
