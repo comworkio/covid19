@@ -17,7 +17,7 @@ error() {
 }
 
 usage(){
-  echo "Usage: ./livraison.sh [options]"
+  echo "Usage: ./getstats.sh [options]"
   echo "-h or --help: print help"
   echo "-a or --all: ingest all data"
   echo "-d or --debug: enable debug traces"
