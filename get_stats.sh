@@ -86,70 +86,70 @@ push_document() {
 }
 
 ingest_data() {
-  i=0
+  line=0
   start_log
   curl "${DATA_STREAM}" 2>>$(get_log_file_name)|while IFS=';' read vdate vcode vplace vcases vdeath vrecover vsource trash; do
-    if [[ $i -gt 0 ]]; then
+    if [[ $line -gt 0 ]]; then
       json="{\"vdate\":\"$(format $vdate)\",\"vcode\":\"$(format $vcode)\",\"vplace\":\"$(format $vplace)\",\"vcases\":$(format_number $vcases),\"vdeath\":$(format_number $vdeath),\"vrecover\":$(format_number $vrecover),\"vsource\":\"$(format "$vsource")\"}"
       push_document "${json}" '.vdate+.vcode+.vplace+.vsource'
     fi
-    (( i++ ))
+    (( line++ ))
   done
   end_log
 }
 
 ingest_data_fr_hostpital() {
-  i=0
+  line=0
   usecase="gouvfr"
   start_log "${usecase}"
   curl -L "${DATA_STREAM_FR_HOSPITAL}" 2>>$(get_log_file_name "${usecase}")|while IFS=';' read vplace vgender vdate vcases vrea vrad vdc trash; do
-    if [[ $i -gt 0 ]]; then
+    if [[ $line -gt 0 ]]; then
       json="{\"vdate\":\"$(format $vdate)\",\"vgender\":$(format_number $vgender),\"vplace\":\"$(format $vplace)\",\"vcases\":$(format_number $vcases),\"vrea\":$(format_number $vrea),\"vrecover\":$(format_number $vrad),\"vdeath\":$(format_number "$vdc"),\"vsource\":\"www.data.gouv.fr\"}"
       push_document "${json}" '.vdate+(.vgender|tostring)+.vplace+.vsource' "${usecase}"
     fi
-    (( i++ ))
+    (( line++ ))
   done
   end_log "${usecase}"
 }
 
 ingest_data_fr_hostpital_new() {
-  i=0
+  line=0
   usecase="new"
   start_log "${usecase}"
   curl -L "${DATA_STREAM_FR_HOSPITAL_NEW}" 2>>$(get_log_file_name "${usecase}")|while IFS=';' read vplace vdate vcases vrea vdc vrad trash; do
-    if [[ $i -gt 0 ]]; then
+    if [[ $line -gt 0 ]]; then
       json="{\"vdate\":\"$(format $vdate)\",\"vplace\":\"$(format $vplace)\",\"vcases\":$(format_number $vcases),\"vrea\":$(format_number $vrea),\"vrecover\":$(format_number $vrad),\"vdeath\":$(format_number "$vdc"),\"vsource\":\"www.data.gouv.fr\"}"
       push_document "${json}" '.vdate+.vplace+.vsource' "${usecase}"
     fi
-    (( i++ ))
+    (( line++ ))
   done
   end_log "${usecase}"
 }
 
 ingest_data_fr_hostpital_age() {
-  i=0
+  line=0
   usecase="age"
   start_log "${usecase}"
   curl -L "${DATA_STREAM_FR_HOSPITAL_AGE}" 2>>$(get_log_file_name "${usecase}")|while IFS=';' read vplace vage vdate vcases vrea vrad vdc trash; do
-    if [[ $i -gt 0 ]]; then
+    if [[ $line -gt 0 ]]; then
       json="{\"vdate\":\"$(format $vdate)\",\"vplace\":\"$(format $vplace)\",\"vage\":$(format_number $vage),\"vcases\":$(format_number $vcases),\"vrea\":$(format_number $vrea),\"vrecover\":$(format_number $vrad),\"vdeath\":$(format_number "$vdc"),\"vsource\":\"www.data.gouv.fr\"}"
       push_document "${json}" '.vdate+(.vage|tostring)+.vplace+.vsource' "${usecase}"
     fi
-    (( i++ ))
+    (( line++ ))
   done
   end_log "${usecase}"
 }
 
 ingest_data_fr_hostpital_ets() {
-  i=0
+  line=0
   usecase="ets"
   start_log "${usecase}"
   curl -L "${DATA_STREAM_FR_HOSPITAL_ETS}" 2>>$(get_log_file_name "${usecase}")|while IFS=';' read vplace vdate vcases trash; do
-    if [[ $i -gt 0 ]]; then
+    if [[ $line -gt 0 ]]; then
       json="{\"vdate\":\"$(format $vdate)\",\"vplace\":\"$(format $vplace)\",\"vcases\":$(format_number $vcases),\"vsource\":\"www.data.gouv.fr\"}"
       push_document "${json}" '.vdate+.vplace+.vsource' "${usecase}"
     fi
-    (( i++ ))
+    (( line++ ))
   done
   end_log "${usecase}"
 }
