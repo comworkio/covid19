@@ -102,41 +102,41 @@ ingest_data_fr_hostpital_new() {
 }
 
 ingest_data_fr_hostpital_age() {
-  LOG_FILE="gouvfr-age-covid19.log"
+  log_file="gouvfr-age-covid19.log"
 
   i=0
-  date > "${LOG_FILE}"
+  date > "${log_file}"
   curl -L "${DATA_STREAM_FR_HOSPITAL_AGE}" 2>>"${LOG_FILE}"|while IFS=';' read vplace vage vdate vcases vrea vrad vdc trash; do
     if [[ $i -gt 0 ]]; then
       json="{\"vdate\":\"$(format $vdate)\",\"vplace\":\"$(format $vplace)\",\"vage\":$(format_number $vage),\"vcases\":$(format_number $vcases),\"vrea\":$(format_number $vrea),\"vrecover\":$(format_number $vrad),\"vdeath\":$(format_number "$vdc"),\"vsource\":\"www.data.gouv.fr\"}"
       id=$(hash_id "${json}" '.vdate+(.vage|tostring)+.vplace+.vsource')
       indice_url="${ELASTIC_URL}/gouvfr-age-covid19-$(format_year_month $vdate)/_doc/${id}"
       if [[ $(format $vdate) != "null" ]]; then
-        curl "${indice_url}" -u "${ELASTIC_USERNAME}:${ELASTIC_PASSWORD}" -X PUT -d "${json}" -H "Content-Type: application/json" >> "${LOG_FILE}" 2>>"${LOG_FILE}"
+        curl "${indice_url}" -u "${ELASTIC_USERNAME}:${ELASTIC_PASSWORD}" -X PUT -d "${json}" -H "Content-Type: application/json" >> "${log_file}" 2>>"${log_file}"
       fi
     fi
     (( i++ ))
   done
-  date >> "${LOG_FILE}"
+  date >> "${log_file}"
 }
 
 ingest_data_fr_hostpital_ets() {
-  LOG_FILE="gouvfr-ets-covid19.log"
+  log_file="gouvfr-ets-covid19.log"
 
   i=0
-  date > "${LOG_FILE}"
+  date > "${log_file}"
   curl -L "${DATA_STREAM_FR_HOSPITAL_ETS}" 2>>"${LOG_FILE}"|while IFS=';' read vplace vdate vcases trash; do
     if [[ $i -gt 0 ]]; then
       json="{\"vdate\":\"$(format $vdate)\",\"vplace\":\"$(format $vplace)\",\"vcases\":$(format_number $vcases),\"vsource\":\"www.data.gouv.fr\"}"
       id=$(hash_id "${json}" '.vdate+.vplace+.vsource')
       indice_url="${ELASTIC_URL}/gouvfr-ets-covid19-$(format_year_month $vdate)/_doc/${id}"
       if [[ $(format $vdate) != "null" ]]; then
-        curl "${indice_url}" -u "${ELASTIC_USERNAME}:${ELASTIC_PASSWORD}" -X PUT -d "${json}" -H "Content-Type: application/json" >> "${LOG_FILE}" 2>>"${LOG_FILE}"
+        curl "${indice_url}" -u "${ELASTIC_USERNAME}:${ELASTIC_PASSWORD}" -X PUT -d "${json}" -H "Content-Type: application/json" >> "${log_file}" 2>>"${log_file}"
       fi
     fi
     (( i++ ))
   done
-  date >> "${LOG_FILE}"
+  date >> "${log_file}"
 }
 
 [[ $# -lt 1 ]] && error
