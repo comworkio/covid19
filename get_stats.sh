@@ -41,23 +41,7 @@ format_year_month() {
 }
 
 hash_id() {
-  echo "${1}"|jq -r '.vdate+.vcode+.vplace+.vsource'|base64|tr -d '='
-}
-
-hash_id_fr_hostpital() {
-  echo "${1}"|jq -r '.vdate+(.vgender|tostring)+.vplace+.vsource'|base64|tr -d '='
-}
-
-hash_id_fr_hostpital_new() {
-  echo "${1}"|jq -r '.vdate+.vplace+.vsource'|base64|tr -d '='
-}
-
-hash_id_fr_hostpital_age() {
-  echo "${1}"|jq -r '.vdate+(.vage|tostring)+.vplace+.vsource'|base64|tr -d '='
-}
-
-hash_id_fr_hostpital_ets() {
-  echo "${1}"|jq -r '.vdate+.vplace+.vsource'|base64|tr -d '='
+  echo "${1}"|jq -r "${2}"|base64|tr -d '='
 }
 
 ingest_data() {
@@ -68,10 +52,10 @@ ingest_data() {
   curl "${DATA_STREAM}" 2>>"${LOG_FILE}"|while IFS=';' read vdate vcode vplace vcases vdeath vrecover vsource trash; do
     if [[ $i -gt 0 ]]; then
       json="{\"vdate\":\"$(format $vdate)\",\"vcode\":\"$(format $vcode)\",\"vplace\":\"$(format $vplace)\",\"vcases\":$(format_number $vcases),\"vdeath\":$(format_number $vdeath),\"vrecover\":$(format_number $vrecover),\"vsource\":\"$(format "$vsource")\"}"
-      id=$(hash_id "${json}")
+      id=$(hash_id "${json}" '.vdate+.vcode+.vplace+.vsource')
       indice_url="${ELASTIC_URL}/covid19-$(format_year_month $vdate)/_doc/${id}"
       if [[ $(format $vdate) != "null" ]]; then
-        curl "${indice_url}" -u "${ELASTIC_USERNAME}:${ELASTIC_PASSWORD}" -X PUT -d "${json}" -H "Content-Type: application/json" >> "${LOG_FILE}" 2>>"${LOG_FILE}"
+        "${DEBUG_FIRST_OP}" curl "${indice_url}" -u "${ELASTIC_USERNAME}:${ELASTIC_PASSWORD}" -X PUT -d "${json}" -H "Content-Type: application/json" >> "${LOG_FILE}" 2>>"${LOG_FILE}"
       fi
     fi
     (( i++ ))
@@ -87,7 +71,7 @@ ingest_data_fr_hostpital() {
   curl -L "${DATA_STREAM_FR_HOSPITAL}" 2>>"${LOG_FILE}"|while IFS=';' read vplace vgender vdate vcases vrea vrad vdc trash; do
     if [[ $i -gt 0 ]]; then
       json="{\"vdate\":\"$(format $vdate)\",\"vgender\":$(format_number $vgender),\"vplace\":\"$(format $vplace)\",\"vcases\":$(format_number $vcases),\"vrea\":$(format_number $vrea),\"vrecover\":$(format_number $vrad),\"vdeath\":$(format_number "$vdc"),\"vsource\":\"www.data.gouv.fr\"}"
-      id=$(hash_id_fr_hostpital "${json}")
+      id=$(hash_id "${json}" '.vdate+(.vgender|tostring)+.vplace+.vsource')
       indice_url="${ELASTIC_URL}/gouvfr-covid19-$(format_year_month $vdate)/_doc/${id}"
       if [[ $(format $vdate) != "null" ]]; then
         curl "${indice_url}" -u "${ELASTIC_USERNAME}:${ELASTIC_PASSWORD}" -X PUT -d "${json}" -H "Content-Type: application/json" >> "${LOG_FILE}" 2>>"${LOG_FILE}"
@@ -106,7 +90,7 @@ ingest_data_fr_hostpital_new() {
   curl -L "${DATA_STREAM_FR_HOSPITAL_NEW}" 2>>"${LOG_FILE}"|while IFS=';' read vplace vdate vcases vrea vdc vrad trash; do
     if [[ $i -gt 0 ]]; then
       json="{\"vdate\":\"$(format $vdate)\",\"vplace\":\"$(format $vplace)\",\"vcases\":$(format_number $vcases),\"vrea\":$(format_number $vrea),\"vrecover\":$(format_number $vrad),\"vdeath\":$(format_number "$vdc"),\"vsource\":\"www.data.gouv.fr\"}"
-      id=$(hash_id_fr_hostpital_new "${json}")
+      id=$(hash_id "${json}" '.vdate+.vplace+.vsource')
       indice_url="${ELASTIC_URL}/gouvfr-new-covid19-$(format_year_month $vdate)/_doc/${id}"
       if [[ $(format $vdate) != "null" ]]; then
         curl "${indice_url}" -u "${ELASTIC_USERNAME}:${ELASTIC_PASSWORD}" -X PUT -d "${json}" -H "Content-Type: application/json" >> "${LOG_FILE}" 2>>"${LOG_FILE}"
@@ -125,7 +109,7 @@ ingest_data_fr_hostpital_age() {
   curl -L "${DATA_STREAM_FR_HOSPITAL_AGE}" 2>>"${LOG_FILE}"|while IFS=';' read vplace vage vdate vcases vrea vrad vdc trash; do
     if [[ $i -gt 0 ]]; then
       json="{\"vdate\":\"$(format $vdate)\",\"vplace\":\"$(format $vplace)\",\"vage\":$(format_number $vage),\"vcases\":$(format_number $vcases),\"vrea\":$(format_number $vrea),\"vrecover\":$(format_number $vrad),\"vdeath\":$(format_number "$vdc"),\"vsource\":\"www.data.gouv.fr\"}"
-      id=$(hash_id_fr_hostpital_age "${json}")
+      id=$(hash_id "${json}" '.vdate+(.vage|tostring)+.vplace+.vsource')
       indice_url="${ELASTIC_URL}/gouvfr-age-covid19-$(format_year_month $vdate)/_doc/${id}"
       if [[ $(format $vdate) != "null" ]]; then
         curl "${indice_url}" -u "${ELASTIC_USERNAME}:${ELASTIC_PASSWORD}" -X PUT -d "${json}" -H "Content-Type: application/json" >> "${LOG_FILE}" 2>>"${LOG_FILE}"
@@ -144,7 +128,7 @@ ingest_data_fr_hostpital_ets() {
   curl -L "${DATA_STREAM_FR_HOSPITAL_ETS}" 2>>"${LOG_FILE}"|while IFS=';' read vplace vdate vcases trash; do
     if [[ $i -gt 0 ]]; then
       json="{\"vdate\":\"$(format $vdate)\",\"vplace\":\"$(format $vplace)\",\"vcases\":$(format_number $vcases),\"vsource\":\"www.data.gouv.fr\"}"
-      id=$(hash_id_fr_hostpital_ets "${json}")
+      id=$(hash_id "${json}" '.vdate+.vplace+.vsource')
       indice_url="${ELASTIC_URL}/gouvfr-ets-covid19-$(format_year_month $vdate)/_doc/${id}"
       if [[ $(format $vdate) != "null" ]]; then
         curl "${indice_url}" -u "${ELASTIC_USERNAME}:${ELASTIC_PASSWORD}" -X PUT -d "${json}" -H "Content-Type: application/json" >> "${LOG_FILE}" 2>>"${LOG_FILE}"
