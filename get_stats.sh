@@ -11,21 +11,21 @@ ELASTIC_PASSWORD="changeit"
 IS_DEBUG="false"
 
 error() {
-    echo "Error : invalid parameter !" >&2
-    echo "Use -h to show all options" >&2
-    exit 1
+  echo "Error : invalid parameter !" >&2
+  echo "Use -h to show all options" >&2
+  exit 1
 }
 
 usage(){
-    echo "Usage: ./livraison.sh [options]"
-    echo "-h or --help: print help"
-    echo "-a or --all: ingest all data"
-    echo "-d or --debug: enable debug traces"
-    echo "--ingest-data : ingest data from www.coronavirus-statistiques.com"
-    echo "--ingest-data-fr-hospital : ingest data from france with www.data.gouv.fr"
-    echo "--ingest-data-fr-hospital-new : ingest data from france with www.data.gouv.fr, new cases"
-    echo "--ingest-data-fr-hospital-age : ingest data from france with www.data.gouv.fr, age class"
-    echo "--ingest-data-fr-hospital-ets : ingest data from france with www.data.gouv.fr, etablissements"
+  echo "Usage: ./livraison.sh [options]"
+  echo "-h or --help: print help"
+  echo "-a or --all: ingest all data"
+  echo "-d or --debug: enable debug traces"
+  echo "--ingest-data: ingest data from www.coronavirus-statistiques.com"
+  echo "--ingest-data-fr-hospital: ingest data from france with www.data.gouv.fr"
+  echo "--ingest-data-fr-hospital-new: ingest data from france with www.data.gouv.fr, new cases"
+  echo "--ingest-data-fr-hospital-age: ingest data from france with www.data.gouv.fr, age classes"
+  echo "--ingest-data-fr-hospital-ets: ingest data from france with www.data.gouv.fr, etablissements"
 }
 
 format() {
@@ -159,22 +159,22 @@ ingest_data_fr_hostpital_ets() {
 options=$(getopt -o a,h,s,d -l help,debug,all,ingest-data,ingest-data-fr-hospital,ingest-data-fr-hospital-new,ingest-data-fr-hospital-age,ingest-data-fr-hospital-ets -- "$@")
 set -- $options 
 while true; do 
-    case "$1" in 
-        -h|--help) usage ; shift ;;
-        -d|--debug) IS_DEBUG="true" ; shift ;;
-        --ingest-data) ingest_data ; shift ;;
-        --ingest-data-fr-hospital) ingest_data_fr_hostpital ; shift ;;
-        --ingest-data-fr-hospital-new) ingest_data_fr_hostpital_new ; shift ;;
-        --ingest-data-fr-hospital-age) ingest_data_fr_hostpital_age ; shift ;;
-        --ingest-data-fr-hospital-ets) ingest_data_fr_hostpital_ets ; shift ;;
-        -a|--all) 
-          ingest_data
-          ingest_data_fr_hostpital
-          ingest_data_fr_hostpital_new
-          ingest_data_fr_hostpital_age
-          ingest_data_fr_hostpital_ets
-          shift ;;
-        --) shift ; break ;; 
-        *) error ; shift ;;
-    esac 
+  case "$1" in 
+    -h|--help) usage ; shift ;;
+    -d|--debug) IS_DEBUG="true" ; shift ;;
+    --ingest-data) ingest_data ; shift ;;
+    --ingest-data-fr-hospital) ingest_data_fr_hostpital ; shift ;;
+    --ingest-data-fr-hospital-new) ingest_data_fr_hostpital_new ; shift ;;
+    --ingest-data-fr-hospital-age) ingest_data_fr_hostpital_age ; shift ;;
+    --ingest-data-fr-hospital-ets) ingest_data_fr_hostpital_ets ; shift ;;
+    -a|--all) 
+      ingest_data
+      ingest_data_fr_hostpital
+      ingest_data_fr_hostpital_new
+      ingest_data_fr_hostpital_age
+      ingest_data_fr_hostpital_ets
+      shift ;;
+    --) shift ; break ;; 
+    *) error ; shift ;;
+  esac 
 done
