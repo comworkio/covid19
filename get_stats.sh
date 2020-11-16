@@ -72,16 +72,15 @@ end_log() {
 
 push_document() {
   json="${1}"
-  vdate="${2}"
-  jsonquery="${3}"
-  usecase="${4}"
+  jsonquery="${2}"
+  usecase="${3}"
   [[ $IS_DEBUG == "true" ]] && set -x
 
   log_file=$(get_log_file_name "${usecase}")
   id=$(hash_id "${json}" "${jsonquery}")
 
   indice_url="${ELASTIC_URL}/$(get_indice_name "${usecase}" "${json}")/_doc/${id}"
-  if [[ $(format $vdate) != "null" ]]; then
+  if [[ $(echo "${json}"|jq -r '.vdate') != "null" ]]; then
     curl "${indice_url}" -u "${ELASTIC_USERNAME}:${ELASTIC_PASSWORD}" -X PUT -d "${json}" -H "Content-Type: application/json" >> "${log_file}" 2>>"${log_file}"
   fi
 }
