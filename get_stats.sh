@@ -55,7 +55,7 @@ ingest_data() {
       id=$(hash_id "${json}" '.vdate+.vcode+.vplace+.vsource')
       indice_url="${ELASTIC_URL}/covid19-$(format_year_month $vdate)/_doc/${id}"
       if [[ $(format $vdate) != "null" ]]; then
-        "${DEBUG_FIRST_OP}" curl "${indice_url}" -u "${ELASTIC_USERNAME}:${ELASTIC_PASSWORD}" -X PUT -d "${json}" -H "Content-Type: application/json" >> "${log_file}" 2>>"${log_file}"
+        curl "${indice_url}" -u "${ELASTIC_USERNAME}:${ELASTIC_PASSWORD}" -X PUT -d "${json}" -H "Content-Type: application/json" >> "${log_file}" 2>>"${log_file}"
       fi
     fi
     (( i++ ))
