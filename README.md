@@ -58,3 +58,9 @@ So the commit comments are automatic messages.
 ![d4](images/4.jpg)
 
 ![d5](images/5.jpg)
+
+## Example of using Timelion with the data
+
+Here we subtract between the cumulative amounts of the day and the day before in order to obtain the number of new cases per day:
+
+![v6](images/6.jpg)
