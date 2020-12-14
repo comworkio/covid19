@@ -12,7 +12,7 @@ Then you'll be able to make some dashboards and graphs on [Kibana](https://www.e
 * getopt
 * curl
 * cron
-* ElasticStack / ELK (ElasticSearch and Kibana are enough for this project)
+* ElasticStack / ELK (ElasticSearch and Kibana are enough)
 
 ## Keep the data up to date
 
