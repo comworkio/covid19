@@ -3,7 +3,10 @@
 This project aims to provide some script that will allow you to index some covid19 opendata into [ElasticSearch](https://www.elastic.co/elasticsearch).
 
 Then you'll be able to make some dashboards and graphs on [Kibana](https://www.elastic.co/kibana) or [Grafana](https://grafana.com).
+## Git repo
 
+* Main repo: https://gitlab.comwork.io/oss/covid19
+* Github mirror repo: https://github.com/idrissneumann/covid19
 ## Needed dependancies:
 
 * bash >= 4
@@ -47,11 +50,6 @@ Here's the indices pattern you need to grant to your elastic stack roles:
 * `covid19-*`
 * `gouvfr-covid19-*`
 * `vaccine-covid19-*`
-
-## Git repo
-
-* Main repo: https://gitlab.comwork.io/oss/covid19
-* Github mirror repo: https://github.com/idrissneumann/covid19
 
 Both are automatically kept up to date from a private repo that also handle automatic deployment on our infrastructure.
 
