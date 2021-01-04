@@ -7,7 +7,7 @@ Then you'll be able to make some dashboards and graphs on [Kibana](https://www.e
 
 * Main repo: https://gitlab.comwork.io/oss/covid19
 * Github mirror repo: https://github.com/idrissneumann/covid19
-## Needed dependancies:
+## Needed dependancies
 
 * bash >= 4
 * coreutils
@@ -27,7 +27,7 @@ First, change the three following variables in the `get_stats.sh`:
 [[ ! $ELASTIC_PASSWORD ]] && export ELASTIC_PASSWORD="changeit"
 ```
 
-As you can see, you also can export them before running the script instead of override the values directly inside.
+As you can see, you also can `export` them before running the script instead of override the values directly inside.
 
 Then, you just need to add a crontab to keep the data up to date once per day:
 
@@ -61,10 +61,17 @@ Here's the indices pattern you need to grant to your elastic stack roles:
 * `gouvfr-covid19-*`
 * `vaccine-covid19-*`
 
-Both are automatically kept up to date from a private repo that also handle automatic deployment on our infrastructure.
+## Index pattern for Kibana
 
-So the commit comments are automatic messages.
-
+Here's the indices pattern you can add to discover all the data with Kibana:
+* `covid19-*`
+* `gouvfr-age-covid19-*`
+* `gouvfr-covid19-*`
+* `gouvfr-ets-covid19-*`
+* `gouvfr-new-covid19-*`
+* `vaccine-covid19-vaccinefr-*`
+* `vaccine-covid19-vaccinelocations*`
+* `vaccine-covid19-vaccinelocations-*`
 ## Examples of dashboard with Kibana
 
 ![d1](images/1.jpg)
