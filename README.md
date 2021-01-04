@@ -47,7 +47,7 @@ As you can see, you also can `export` them before running the script instead of 
 * `gouvfr-ets-covid19-*`
 * `gouvfr-new-covid19-*`
 * `vaccine-covid19-vaccinefr-*`
-* `vaccine-covid19-vaccinelocations*`
+* `vaccine-covid19-vaccinations-*`
 * `vaccine-covid19-vaccinelocations-*`
 
 ## Datasources
