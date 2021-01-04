@@ -200,7 +200,7 @@ ingest_data_world_vaccinations() {
   curl -L "${DATA_VACCINE_WORLD_VACCINATIONS}" 2>>$(get_log_file_name "${usecase}")|while IFS=',' read vplace viso vdate vtotal vdaily vtotalperhundred vtotalpermillion trash; do
     if [[ $line -gt 0 ]]; then
       json="{\"vdate\":\"$(format $vdate)\",\"vplace\":\"$(format $vplace)\",\"viso\":\"$(format $viso)\",\"vtotal\":$(format_number $vtotal),\"vdaily\":$(format_number $vdaily),\"vtotalperhundred\":$(format_number $vtotalperhundred),\"vtotalpermillion\":$(format_number $vtotalpermillion)}"
-      push_document "${json}" '.vdate+.vplace+.vsource' "${usecase}"
+      push_document "${json}" '.vdate+.vplace' "${usecase}"
     fi
     (( line++ ))
   done
