@@ -210,7 +210,7 @@ ingest_data_world_vaccinations() {
 [[ $# -lt 1 ]] && error
 
 if [[ $ELASTIC_URL == "changeit" || $ELASTIC_USERNAME == "changeit" || $ELASTIC_PASSWORD == "changeit" ]]; then
-  echo "You need to override the following variables with real values: ELASTIC_URL, ELASTIC_USERNAME and ELASTIC_PASSWORD"
+  echo "You need to override the following variables with real values: ELASTIC_URL, ELASTIC_USERNAME and ELASTIC_PASSWORD" >&2
   exit 1
 fi
 
