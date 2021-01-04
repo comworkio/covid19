@@ -7,7 +7,9 @@ Then you'll be able to make some dashboards and graphs on [Kibana](https://www.e
 
 * Main repo: https://gitlab.comwork.io/oss/covid19
 * Github mirror repo: https://github.com/idrissneumann/covid19
-## Needed dependancies
+## Getting started
+
+**0/** you need to install the following dependancies:
 
 * bash >= 4
 * coreutils
@@ -16,8 +18,6 @@ Then you'll be able to make some dashboards and graphs on [Kibana](https://www.e
 * curl
 * cron
 * ElasticStack / ELK (ElasticSearch and Kibana are enough)
-
-## Getting started
 
 **1/** configure your elastic role and user with the `all` rights on the following indice pattern:
 * `covid19-*`
