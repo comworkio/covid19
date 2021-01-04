@@ -19,7 +19,12 @@ Then you'll be able to make some dashboards and graphs on [Kibana](https://www.e
 
 ## Getting started
 
-First, change the three following variables in the `get_stats.sh`:
+**1/** configure your elastic role and user with the `all` rights on the following indice pattern:
+* `covid19-*`
+* `gouvfr-covid19-*`
+* `vaccine-covid19-*`
+
+**2/** change the three following variables in the `get_stats.sh`:
 
 ```shell
 [[ ! $ELASTIC_URL ]] && export ELASTIC_URL="changeit"
@@ -29,11 +34,21 @@ First, change the three following variables in the `get_stats.sh`:
 
 As you can see, you also can `export` them before running the script instead of override the values directly inside.
 
-Then, you just need to add a crontab to keep the data up to date once per day:
+**3/** you just need to add a crontab to keep the data up to date once per day:
 
 ```shell
 0 0 * * * /home/centos/covid19/get_stats.sh -a
 ```
+
+**4/** You can add to your Kibana the following index pattern in order to discover the data and be able to make your graphs:
+* `covid19-*`
+* `gouvfr-age-covid19-*`
+* `gouvfr-covid19-*`
+* `gouvfr-ets-covid19-*`
+* `gouvfr-new-covid19-*`
+* `vaccine-covid19-vaccinefr-*`
+* `vaccine-covid19-vaccinelocations*`
+* `vaccine-covid19-vaccinelocations-*`
 
 ## Datasources
 
@@ -53,25 +68,6 @@ All the data are converted to a JSON document that will be indexed and contains 
 * `vrecover`: number of recover or people that went back to their home after hospitalization
 * `vrea`: number of people in intensive care
 * `vsource`: the source of the data (governments, wikipedia, etc)
-
-## Indice pattern for elastic roles
-
-Here's the indices pattern you need to grant to your elastic stack roles:
-* `covid19-*`
-* `gouvfr-covid19-*`
-* `vaccine-covid19-*`
-
-## Index pattern for Kibana
-
-Here's the indices pattern you can add to discover all the data with Kibana:
-* `covid19-*`
-* `gouvfr-age-covid19-*`
-* `gouvfr-covid19-*`
-* `gouvfr-ets-covid19-*`
-* `gouvfr-new-covid19-*`
-* `vaccine-covid19-vaccinefr-*`
-* `vaccine-covid19-vaccinelocations*`
-* `vaccine-covid19-vaccinelocations-*`
 ## Examples of dashboard with Kibana
 
 ![d1](images/1.jpg)
