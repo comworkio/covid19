@@ -5,6 +5,9 @@ DATA_STREAM_FR_HOSPITAL="https://www.data.gouv.fr/fr/datasets/r/63352e38-d353-4b
 DATA_STREAM_FR_HOSPITAL_NEW="https://www.data.gouv.fr/fr/datasets/r/6fadff46-9efd-4c53-942a-54aca783c30c"
 DATA_STREAM_FR_HOSPITAL_AGE="https://www.data.gouv.fr/fr/datasets/r/08c18e08-6780-452d-9b8c-ae244ad529b3"
 DATA_STREAM_FR_HOSPITAL_ETS="https://www.data.gouv.fr/fr/datasets/r/41b9bd2a-b5b6-4271-8878-e45a8902ef00"
+DATA_VACCINE_FR="https://raw.githubusercontent.com/rozierguillaume/vaccintracker/main/data.csv"
+DATA_VACCINE_WORLD_LOCATIONS="https://raw.githubusercontent.com/owid/covid-19-data/master/public/data/vaccinations/locations.csv"
+DATA_VACCINE_WORLD_VACCINATIONS="https://raw.githubusercontent.com/owid/covid-19-data/master/public/data/vaccinations/vaccinations.csv"
 ELASTIC_URL="changeit"
 ELASTIC_USERNAME="changeit"
 ELASTIC_PASSWORD="changeit"
@@ -26,6 +29,9 @@ usage(){
   echo "--ingest-data-fr-hospital-new: ingest data from france with www.data.gouv.fr, new cases"
   echo "--ingest-data-fr-hospital-age: ingest data from france with www.data.gouv.fr, age classes"
   echo "--ingest-data-fr-hospital-ets: ingest data from france with www.data.gouv.fr, etablissements"
+  echo "--ingest-data-fr-vaccine: ingest vaccine data from france with Guillaume Rozier (on github)"
+  echo "--ingest-data-world-vaccine-locations: ingest worldwide vaccine data locations (on github)"
+  echo "--ingest-data-world-vaccinations: ingest worldwide vaccine data vaccinations (on github)"
 }
 
 format() {
@@ -35,7 +41,7 @@ format() {
 
 format_number() {
   v=$(echo "${@}"|tr -d '"'|sed 's/\r//g')
-  [[ $v =~ ^[0-9]+$ ]] && echo "${v}" || echo "-1"  
+  [[ $v =~ ^[0-9\.]+$ ]] && echo "${v}" || echo "-1"  
 }
 
 format_year_month() {
@@ -49,8 +55,13 @@ hash_id() {
 get_usecase_prefix() {
   ext=""
   prefix=""
-  [[ $1 && $1 != "null" ]] && prefix="gouvfr-"
-  [[ $1 && $1 != "null" && $1 != "gouvfr" ]] && ext="-${1}"
+  if [[ $1 && $1 =~ .*vaccin.* ]]; then 
+    prefix="vaccine-"
+  elif [[ $1 && $1 != "null" ]]; then
+    prefix="gouvfr-"
+  fi
+
+  [[ $1 && $1 != "null" && $1 != "gouvfr" && $1 != "vaccine" ]] && ext="-${1}"
   echo "${prefix}covid19${ext}"
 }
 
@@ -154,9 +165,51 @@ ingest_data_fr_hostpital_ets() {
   end_log "${usecase}"
 }
 
+ingest_data_fr_vaccine() {
+  line=0
+  usecase="vaccinefr"
+  start_log "${usecase}"
+  curl -L "${DATA_VACCINE_FR}" 2>>$(get_log_file_name "${usecase}")|while IFS=',' read vdate vcount vhour vsource trash; do
+    if [[ $line -gt 0 ]]; then
+      json="{\"vdate\":\"$(format $vdate)\",\"vhour\":\"$(format $vhour)\",\"vcount\":$(format_number $vcount),\"vsource\":\"$(format $vsource)\"}"
+      push_document "${json}" '.vdate+.vhour+.vsource' "${usecase}"
+    fi
+    (( line++ ))
+  done
+  end_log "${usecase}"
+}
+
+ingest_data_world_vaccine_locations() {
+  line=0
+  usecase="vaccinelocations"
+  start_log "${usecase}"
+  curl -L "${DATA_VACCINE_WORLD_LOCATIONS}" 2>>$(get_log_file_name "${usecase}")|while IFS=',' read vplace viso vsource vurl vvaccines vdate trash; do
+    if [[ $line -gt 0 ]]; then
+      json="{\"vdate\":\"$(format $vdate)\",\"vplace\":\"$(format $vplace)\",\"viso\":\"$(format $viso)\",\"vvaccines\":\"$(format $vvaccines)\",\"vsource\":\"$(format $vsource)\",\"vurl\":\"$(format $vurl)\"}"
+      push_document "${json}" '.vdate+.vplace+.vsource' "${usecase}"
+    fi
+    (( line++ ))
+  done
+  end_log "${usecase}"
+}
+
+ingest_data_world_vaccinations() {
+  line=0
+  usecase="vaccinations"
+  start_log "${usecase}"
+  curl -L "${DATA_VACCINE_WORLD_VACCINATIONS}" 2>>$(get_log_file_name "${usecase}")|while IFS=',' read vplace viso vdate vtotal vdaily vtotalperhundred vtotalpermillion trash; do
+    if [[ $line -gt 0 ]]; then
+      json="{\"vdate\":\"$(format $vdate)\",\"vplace\":\"$(format $vplace)\",\"viso\":\"$(format $viso)\",\"vtotal\":$(format_number $vtotal),\"vdaily\":$(format_number $vdaily),\"vtotalperhundred\":$(format_number $vtotalperhundred),\"vtotalpermillion\":$(format_number $vtotalpermillion)}"
+      push_document "${json}" '.vdate+.vplace+.vsource' "${usecase}"
+    fi
+    (( line++ ))
+  done
+  end_log "${usecase}"
+}
+
 [[ $# -lt 1 ]] && error
 
-options=$(getopt -o a,h,s,d -l help,debug,all,ingest-data,ingest-data-fr-hospital,ingest-data-fr-hospital-new,ingest-data-fr-hospital-age,ingest-data-fr-hospital-ets -- "$@")
+options=$(getopt -o a,h,s,d -l help,debug,all,ingest-data,ingest-data-fr-hospital,ingest-data-fr-hospital-new,ingest-data-fr-hospital-age,ingest-data-fr-hospital-ets,ingest-data-fr-vaccine,ingest-data-world-vaccine-locations,ingest-data-world-vaccinations -- "$@")
 set -- $options 
 while true; do 
   case "$1" in 
@@ -167,12 +220,18 @@ while true; do
     --ingest-data-fr-hospital-new) ingest_data_fr_hostpital_new ; shift ;;
     --ingest-data-fr-hospital-age) ingest_data_fr_hostpital_age ; shift ;;
     --ingest-data-fr-hospital-ets) ingest_data_fr_hostpital_ets ; shift ;;
+    --ingest-data-fr-vaccine) ingest_data_fr_vaccine ; shift ;;
+    --ingest-data-world-vaccine-locations) ingest_data_world_vaccine_locations ; shift ;;
+    --ingest-data-world-vaccinations) ingest_data_world_vaccinations ; shift ;;
     -a|--all) 
       ingest_data
       ingest_data_fr_hostpital
       ingest_data_fr_hostpital_new
       ingest_data_fr_hostpital_age
       ingest_data_fr_hostpital_ets
+      ingest_data_fr_vaccine
+      ingest_data_world_vaccine_locations
+      ingest_data_world_vaccinations
       shift ;;
     --) shift ; break ;; 
     *) error ; shift ;;

@@ -24,8 +24,10 @@ You need to add a crontab to keep the data up to date once per day:
 
 ## Datasources
 
-* www.coronavirus-statistiques.com: world stats
-* www.data.gouv.fr: for the French stats
+* https://www.coronavirus-statistiques.com : world stats
+* https://www.data.gouv.fr : for the French stats
+* https://github.com/owid/covid-19-data : for vaccine data (worldwide)
+* https://github.com/rozierguillaume/vaccintracker : for french vaccine data
 
 ## Data types
 
@@ -37,7 +39,14 @@ All the data are converted to a JSON document that will be indexed and contains 
 * `vdeath`: number of death
 * `vrecover`: number of recover or people that went back to their home after hospitalization
 * `vrea`: number of people in intensive care
-* `source`: the source of the data (governments, wikipedia, etc)
+* `vsource`: the source of the data (governments, wikipedia, etc)
+
+## Indice pattern for elastic roles
+
+Here's the indices pattern you need to grant to your elastic stack roles:
+* `covid19-*`
+* `gouvfr-covid19-*`
+* `vaccine-covid19-*`
 
 ## Git repo
 
