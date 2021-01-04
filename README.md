@@ -17,9 +17,19 @@ Then you'll be able to make some dashboards and graphs on [Kibana](https://www.e
 * cron
 * ElasticStack / ELK (ElasticSearch and Kibana are enough)
 
-## Keep the data up to date
+## Getting started
 
-You need to add a crontab to keep the data up to date once per day:
+First, change the three following variables in the `get_stats.sh`:
+
+```shell
+[[ ! $ELASTIC_URL ]] && export ELASTIC_URL="changeit"
+[[ ! $ELASTIC_USERNAME ]] && export ELASTIC_USERNAME="changeit"
+[[ ! $ELASTIC_PASSWORD ]] && export ELASTIC_PASSWORD="changeit"
+```
+
+As you can see, you also can export them before running the script instead of override the values directly inside.
+
+Then, you just need to add a crontab to keep the data up to date once per day:
 
 ```shell
 0 0 * * * /home/centos/covid19/get_stats.sh -a

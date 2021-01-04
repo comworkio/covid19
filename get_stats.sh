@@ -8,9 +8,9 @@ DATA_STREAM_FR_HOSPITAL_ETS="https://www.data.gouv.fr/fr/datasets/r/41b9bd2a-b5b
 DATA_VACCINE_FR="https://raw.githubusercontent.com/rozierguillaume/vaccintracker/main/data.csv"
 DATA_VACCINE_WORLD_LOCATIONS="https://raw.githubusercontent.com/owid/covid-19-data/master/public/data/vaccinations/locations.csv"
 DATA_VACCINE_WORLD_VACCINATIONS="https://raw.githubusercontent.com/owid/covid-19-data/master/public/data/vaccinations/vaccinations.csv"
-ELASTIC_URL="changeit"
-ELASTIC_USERNAME="changeit"
-ELASTIC_PASSWORD="changeit"
+[[ ! $ELASTIC_URL ]] && export ELASTIC_URL="changeit"
+[[ ! $ELASTIC_USERNAME ]] && export ELASTIC_USERNAME="changeit"
+[[ ! $ELASTIC_PASSWORD ]] && export ELASTIC_PASSWORD="changeit"
 IS_DEBUG="false"
 
 error() {
@@ -208,6 +208,11 @@ ingest_data_world_vaccinations() {
 }
 
 [[ $# -lt 1 ]] && error
+
+if [[ $ELASTIC_URL == "changeit" || $ELASTIC_USERNAME == "changeit" || $ELASTIC_PASSWORD == "changeit" ]]; then
+  echo "You need to override the following variables with real values: ELASTIC_URL, ELASTIC_USERNAME and ELASTIC_PASSWORD"
+  exit 1
+fi
 
 options=$(getopt -o a,h,s,d -l help,debug,all,ingest-data,ingest-data-fr-hospital,ingest-data-fr-hospital-new,ingest-data-fr-hospital-age,ingest-data-fr-hospital-ets,ingest-data-fr-vaccine,ingest-data-world-vaccine-locations,ingest-data-world-vaccinations -- "$@")
 set -- $options 
