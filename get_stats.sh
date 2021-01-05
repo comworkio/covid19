@@ -223,14 +223,16 @@ ingest_all() {
 }
 
 ingest_daemon() {
+  usecase="${1}"
   if [[ $DAEMON_MODE == "enabled" ]]; then
-    echo "Running as a deamon with WAIT_TIME=${WAIT_TIME}"
+    echo "Running ${usecase} as a deamon with WAIT_TIME=${WAIT_TIME}"
     while true; do
-      eval "${1}"
+      eval "${usecase}"
       sleep "${WAIT_TIME}"
     done
   else
-    ingest_all
+    echo "Running ${usecase} as a single execution"
+    eval "${usecase}"
   fi
 }
 
