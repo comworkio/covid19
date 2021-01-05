@@ -254,7 +254,7 @@ ingest_daemon() {
     exit 1
   fi
 
-  if [[ ! $WAIT_TIME =~ ^[0-9]+ ]]; then
+  if [[ $DAEMON_MODE == "enabled" ]] && [[ ! $WAIT_TIME =~ ^[0-9]+ ]]; then
     echo "Error: You need to override WAIT_TIME with a numeric value" >&2
     exit 1
   fi
