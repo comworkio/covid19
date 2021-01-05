@@ -70,6 +70,8 @@ All the data are converted to a JSON document that will be indexed and contains 
 * `vsource`: the source of the data (governments, wikipedia, etc)
 ## Examples of dashboard with Kibana
 
+![d7](images/7.jpg)
+
 ![d1](images/1.jpg)
 
 ![d2](images/2.jpg)
