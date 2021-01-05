@@ -15,6 +15,7 @@ DATA_VACCINE_WORLD_VACCINATIONS="https://raw.githubusercontent.com/owid/covid-19
 [[ ! $WAIT_TIME ]] && export WAIT_TIME=86400
 [[ ! $DEBUG_MODE ]] && export DEBUG_MODE="disabled"
 [[ ! $DAEMON_MODE ]] && export DAEMON_MODE="disabled"
+[[ ! $CONTAINER_MODE ]] && export CONTAINER_MODE="disabled"
 
 error() {
   echo "Error: invalid parameter !" >&2
@@ -78,11 +79,19 @@ get_indice_name() {
 }
 
 start_log() {
-  date > $(get_log_file_name "${1}")
+  usecase="${1}"
+  [[ $CONTAINER_MODE == "enabled" ]] && date || date > $(get_log_file_name "${usecase}")
 }
 
 end_log() {
-  bash -c "echo ''; date" >> $(get_log_file_name "${1}")
+  usecase="${1}"
+  [[ $CONTAINER_MODE == "enabled" ]] && bash -c "echo ''; date" || bash -c "echo ''; date" >> $(get_log_file_name "${usecase}")
+}
+
+invoke_url() {
+  url="${1}"
+  usecase="${2}"
+  [[ $CONTAINER_MODE == "enabled" ]] && curl -L "${url}" || curl -L "${url}" 2>>$(get_log_file_name "${usecase}")
 }
 
 push_document() {
@@ -95,15 +104,21 @@ push_document() {
   id=$(hash_id "${json}" "${jsonquery}")
 
   indice_url="${ELASTIC_URL}/$(get_indice_name "${usecase}" "${json}")/_doc/${id}"
+  content_type="Content-Type: application/json"
   if [[ $(echo "${json}"|jq -r '.vdate') != "null" ]]; then
-    curl "${indice_url}" -u "${ELASTIC_USERNAME}:${ELASTIC_PASSWORD}" -X PUT -d "${json}" -H "Content-Type: application/json" >> "${log_file}" 2>>"${log_file}"
+    if [[ $CONTAINER_MODE == "enabled" ]]; then
+      curl "${indice_url}" -u "${ELASTIC_USERNAME}:${ELASTIC_PASSWORD}" -X PUT -d "${json}" -H "${content_type}"
+    else
+      curl "${indice_url}" -u "${ELASTIC_USERNAME}:${ELASTIC_PASSWORD}" -X PUT -d "${json}" -H "${content_type}" >> "${log_file}" 2>>"${log_file}"
+    fi
   fi
 }
 
 ingest_data() {
   line=0
-  start_log
-  curl "${DATA_STREAM}" 2>>$(get_log_file_name)|while IFS=';' read vdate vcode vplace vcases vdeath vrecover vsource trash; do
+  usecase=""
+  start_log "${usecase}"
+  invoke_url "${DATA_STREAM}" "${usecase}"|while IFS=';' read vdate vcode vplace vcases vdeath vrecover vsource trash; do
     if [[ $line -gt 0 ]]; then
       json="{\"vdate\":\"$(format $vdate)\",\"vcode\":\"$(format $vcode)\",\"vplace\":\"$(format $vplace)\",\"vcases\":$(format_number $vcases),\"vdeath\":$(format_number $vdeath),\"vrecover\":$(format_number $vrecover),\"vsource\":\"$(format "$vsource")\"}"
       push_document "${json}" '.vdate+.vcode+.vplace+.vsource'
@@ -117,7 +132,7 @@ ingest_data_fr_hostpital() {
   line=0
   usecase="gouvfr"
   start_log "${usecase}"
-  curl -L "${DATA_STREAM_FR_HOSPITAL}" 2>>$(get_log_file_name "${usecase}")|while IFS=';' read vplace vgender vdate vcases vrea vrad vdc trash; do
+  invoke_url "${DATA_STREAM_FR_HOSPITAL}" "${usecase}"|while IFS=';' read vplace vgender vdate vcases vrea vrad vdc trash; do
     if [[ $line -gt 0 ]]; then
       json="{\"vdate\":\"$(format $vdate)\",\"vgender\":$(format_number $vgender),\"vplace\":\"$(format $vplace)\",\"vcases\":$(format_number $vcases),\"vrea\":$(format_number $vrea),\"vrecover\":$(format_number $vrad),\"vdeath\":$(format_number "$vdc"),\"vsource\":\"www.data.gouv.fr\"}"
       push_document "${json}" '.vdate+(.vgender|tostring)+.vplace+.vsource' "${usecase}"
@@ -131,7 +146,7 @@ ingest_data_fr_hostpital_new() {
   line=0
   usecase="new"
   start_log "${usecase}"
-  curl -L "${DATA_STREAM_FR_HOSPITAL_NEW}" 2>>$(get_log_file_name "${usecase}")|while IFS=';' read vplace vdate vcases vrea vdc vrad trash; do
+  invoke_url "${DATA_STREAM_FR_HOSPITAL_NEW}" "${usecase}"|while IFS=';' read vplace vdate vcases vrea vdc vrad trash; do
     if [[ $line -gt 0 ]]; then
       json="{\"vdate\":\"$(format $vdate)\",\"vplace\":\"$(format $vplace)\",\"vcases\":$(format_number $vcases),\"vrea\":$(format_number $vrea),\"vrecover\":$(format_number $vrad),\"vdeath\":$(format_number "$vdc"),\"vsource\":\"www.data.gouv.fr\"}"
       push_document "${json}" '.vdate+.vplace+.vsource' "${usecase}"
@@ -145,7 +160,7 @@ ingest_data_fr_hostpital_age() {
   line=0
   usecase="age"
   start_log "${usecase}"
-  curl -L "${DATA_STREAM_FR_HOSPITAL_AGE}" 2>>$(get_log_file_name "${usecase}")|while IFS=';' read vplace vage vdate vcases vrea vrad vdc trash; do
+  invoke_url "${DATA_STREAM_FR_HOSPITAL_AGE}" "${usecase}"|while IFS=';' read vplace vage vdate vcases vrea vrad vdc trash; do
     if [[ $line -gt 0 ]]; then
       json="{\"vdate\":\"$(format $vdate)\",\"vplace\":\"$(format $vplace)\",\"vage\":$(format_number $vage),\"vcases\":$(format_number $vcases),\"vrea\":$(format_number $vrea),\"vrecover\":$(format_number $vrad),\"vdeath\":$(format_number "$vdc"),\"vsource\":\"www.data.gouv.fr\"}"
       push_document "${json}" '.vdate+(.vage|tostring)+.vplace+.vsource' "${usecase}"
@@ -159,7 +174,7 @@ ingest_data_fr_hostpital_ets() {
   line=0
   usecase="ets"
   start_log "${usecase}"
-  curl -L "${DATA_STREAM_FR_HOSPITAL_ETS}" 2>>$(get_log_file_name "${usecase}")|while IFS=';' read vplace vdate vcases trash; do
+  invoke_url "${DATA_STREAM_FR_HOSPITAL_ETS}" "${usecase}"|while IFS=';' read vplace vdate vcases trash; do
     if [[ $line -gt 0 ]]; then
       json="{\"vdate\":\"$(format $vdate)\",\"vplace\":\"$(format $vplace)\",\"vcases\":$(format_number $vcases),\"vsource\":\"www.data.gouv.fr\"}"
       push_document "${json}" '.vdate+.vplace+.vsource' "${usecase}"
@@ -173,7 +188,7 @@ ingest_data_fr_vaccine() {
   line=0
   usecase="vaccinefr"
   start_log "${usecase}"
-  curl -L "${DATA_VACCINE_FR}" 2>>$(get_log_file_name "${usecase}")|while IFS=',' read vdate vcount vhour vsource trash; do
+  invoke_url "${DATA_VACCINE_FR}" "${usecase}"|while IFS=',' read vdate vcount vhour vsource trash; do
     if [[ $line -gt 0 ]]; then
       json="{\"vdate\":\"$(format $vdate)\",\"vhour\":\"$(format $vhour)\",\"vcount\":$(format_number $vcount),\"vsource\":\"$(format $vsource)\"}"
       push_document "${json}" '.vdate+.vhour+.vsource' "${usecase}"
@@ -187,7 +202,7 @@ ingest_data_world_vaccine_locations() {
   line=0
   usecase="vaccinelocations"
   start_log "${usecase}"
-  curl -L "${DATA_VACCINE_WORLD_LOCATIONS}" 2>>$(get_log_file_name "${usecase}")|while IFS=',' read vplace viso vsource vurl vvaccines vdate trash; do
+  invoke_url "${DATA_VACCINE_WORLD_LOCATIONS}" "${usecase}"|while IFS=',' read vplace viso vsource vurl vvaccines vdate trash; do
     if [[ $line -gt 0 ]]; then
       json="{\"vdate\":\"$(format $vdate)\",\"vplace\":\"$(format $vplace)\",\"viso\":\"$(format $viso)\",\"vvaccines\":\"$(format $vvaccines)\",\"vsource\":\"$(format $vsource)\",\"vurl\":\"$(format $vurl)\"}"
       push_document "${json}" '.vdate+.vplace+.vsource' "${usecase}"
@@ -201,7 +216,7 @@ ingest_data_world_vaccinations() {
   line=0
   usecase="vaccinations"
   start_log "${usecase}"
-  curl -L "${DATA_VACCINE_WORLD_VACCINATIONS}" 2>>$(get_log_file_name "${usecase}")|while IFS=',' read vplace viso vdate vtotal vdaily vtotalperhundred vtotalpermillion trash; do
+  invoke_url "${DATA_VACCINE_WORLD_VACCINATIONS}" "${usecase}"|while IFS=',' read vplace viso vdate vtotal vdaily vtotalperhundred vtotalpermillion trash; do
     if [[ $line -gt 0 ]]; then
       json="{\"vdate\":\"$(format $vdate)\",\"vplace\":\"$(format $vplace)\",\"viso\":\"$(format $viso)\",\"vtotal\":$(format_number $vtotal),\"vdaily\":$(format_number $vdaily),\"vtotalperhundred\":$(format_number $vtotalperhundred),\"vtotalpermillion\":$(format_number $vtotalpermillion)}"
       push_document "${json}" '.vdate+.vplace' "${usecase}"
@@ -248,13 +263,14 @@ if [[ ! $WAIT_TIME =~ ^[0-9]+ ]]; then
   exit 1
 fi
 
-options=$(getopt -o a,h,s,d -l help,debug,daemon-mode,all,ingest-data,ingest-data-fr-hospital,ingest-data-fr-hospital-new,ingest-data-fr-hospital-age,ingest-data-fr-hospital-ets,ingest-data-fr-vaccine,ingest-data-world-vaccine-locations,ingest-data-world-vaccinations -- "$@")
+options=$(getopt -o a,h,s,d -l help,debug,daemon-mode,container-mode,all,ingest-data,ingest-data-fr-hospital,ingest-data-fr-hospital-new,ingest-data-fr-hospital-age,ingest-data-fr-hospital-ets,ingest-data-fr-vaccine,ingest-data-world-vaccine-locations,ingest-data-world-vaccinations -- "$@")
 set -- $options 
 while true; do 
   case "$1" in 
     -h|--help) usage ; shift ;;
     -d|--debug) DEBUG_MODE="enabled" ; shift ;;
     --daemon-mode) DAEMON_MODE="enabled" ; shift ;;
+    --container-mode) CONTAINER_MODE="enabled" ; shift ;;
     --ingest-data) ingest_daemon "ingest_data" ; shift ;;
     --ingest-data-fr-hospital) ingest_daemon "ingest_data_fr_hostpital" ; shift ;;
     --ingest-data-fr-hospital-new) ingest_daemon "ingest_data_fr_hostpital_new" ; shift ;;
