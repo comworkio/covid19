@@ -1,7 +1,7 @@
 FROM balenalib/raspberrypi3-debian:latest
 
-ENV CONTAINER_MODE=enabled \
-    DAEMON_MODE=enabled
+ENV DAEMON_MODE=enabled \
+    CONTAINER_MODE=enabled
 
 COPY ./get_stats.sh /
 
