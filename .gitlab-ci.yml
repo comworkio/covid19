@@ -10,7 +10,7 @@ covid-stats-x86:
       - /^(master.*)$/
     changes:
       - get_stats.sh
-      - Dockerfile.arm
+      - Dockerfile
   tags:
     - covid19
 
