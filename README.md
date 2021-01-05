@@ -9,7 +9,7 @@ Then you'll be able to make some dashboards and graphs on [Kibana](https://www.e
 * Github mirror repo: https://github.com/idrissneumann/covid19
 ## Getting started
 
-### With oci / docker containers
+### With docker
 
 A docker image is delivered on docker-hub for `x86` and `arm` achitecture here: https://hub.docker.com/repository/docker/comworkio/covid-stats
 
@@ -30,10 +30,28 @@ docker pull comworkio/covid-stats:1.0-arm # x86
 docker pull comworkio/covid-stats:1.0-{sha}-arm # x86
 ```
 
-Those tags are built and optimized for raspberrypi.
+Those tags are built on and optimized for raspberrypi.
 
-A docker-compose file for each architecture, with the minimal stack will be delivered soon.
-### Without oci / docker containers
+Refer to the "Without docker" section in order to pick the same index patterns configurations and role (points **1** and **4**).
+
+### Minamal environment with docker-compose
+
+Pick the docker-compose file corresponding to your own architecture:
+* `docker-compose-x86.yml`: x86 (vps on the cloud, etc)
+* `docker-compose-arm.yml`: arm (raspberrypi, etc)
+
+Refer to the "Without docker" section in order to pick the same index patterns configurations (point **4**).
+
+The try:
+
+```shell
+$ docker-compose -f docker-compose-x86.yml up -d # on x86
+$ docker-compose -f docker-compose-arm.yml up -d # on arm
+```
+
+The go: http://127.0.0.1:5601
+
+### Without docker
 
 **0/** you need to install the following dependancies:
 
