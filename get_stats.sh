@@ -17,7 +17,7 @@ DATA_VACCINE_WORLD_VACCINATIONS="https://raw.githubusercontent.com/owid/covid-19
 [[ ! $DAEMON_MODE ]] && export DAEMON_MODE="disabled"
 
 error() {
-  echo "Error : invalid parameter !" >&2
+  echo "Error: invalid parameter !" >&2
   echo "Use -h to show all options" >&2
   exit 1
 }
@@ -237,12 +237,12 @@ ingest_daemon() {
 [[ $# -lt 1 ]] && error
 
 if [[ $ELASTIC_URL == "changeit" || $ELASTIC_USERNAME == "changeit" || $ELASTIC_PASSWORD == "changeit" ]]; then
-  echo "You need to override the following variables with real values: ELASTIC_URL, ELASTIC_USERNAME and ELASTIC_PASSWORD" >&2
+  echo "Error: You need to override the following variables with real values: ELASTIC_URL, ELASTIC_USERNAME and ELASTIC_PASSWORD" >&2
   exit 1
 fi
 
 if [[ ! $WAIT_TIME =~ ^[0-9]+ ]]; then
-  echo "You need to override WAIT_TIME with a numeric value" >&2
+  echo "Error: You need to override WAIT_TIME with a numeric value" >&2
   exit 1
 fi
 
