@@ -8,10 +8,13 @@ DATA_STREAM_FR_HOSPITAL_ETS="https://www.data.gouv.fr/fr/datasets/r/41b9bd2a-b5b
 DATA_VACCINE_FR="https://raw.githubusercontent.com/rozierguillaume/vaccintracker/main/data.csv"
 DATA_VACCINE_WORLD_LOCATIONS="https://raw.githubusercontent.com/owid/covid-19-data/master/public/data/vaccinations/locations.csv"
 DATA_VACCINE_WORLD_VACCINATIONS="https://raw.githubusercontent.com/owid/covid-19-data/master/public/data/vaccinations/vaccinations.csv"
+
 [[ ! $ELASTIC_URL ]] && export ELASTIC_URL="changeit"
 [[ ! $ELASTIC_USERNAME ]] && export ELASTIC_USERNAME="changeit"
 [[ ! $ELASTIC_PASSWORD ]] && export ELASTIC_PASSWORD="changeit"
-IS_DEBUG="false"
+[[ ! $WAIT_TIME ]] && export WAIT_TIME=86400
+[[ ! $DEBUG_MODE ]] && export DEBUG_MODE="disabled"
+[[ ! $DAEMON_MODE ]] && export DAEMON_MODE="disabled"
 
 error() {
   echo "Error : invalid parameter !" >&2
@@ -19,11 +22,12 @@ error() {
   exit 1
 }
 
-usage(){
-  echo "Usage: ./getstats.sh [options]"
+usage() {
+  echo "Usage: ./get_stats.sh [options]"
   echo "-h or --help: print help"
   echo "-a or --all: ingest all data"
-  echo "-d or --debug: enable debug traces"
+  echo "-d or --debug: enable debug traces (override the DEBUG_MODE env variable)"
+  echo "--daemon-mode: enable daemon mode (override the DAEMON_MODE env variable)"
   echo "--ingest-data: ingest data from www.coronavirus-statistiques.com"
   echo "--ingest-data-fr-hospital: ingest data from france with www.data.gouv.fr"
   echo "--ingest-data-fr-hospital-new: ingest data from france with www.data.gouv.fr, new cases"
@@ -85,7 +89,7 @@ push_document() {
   json="${1}"
   jsonquery="${2}"
   usecase="${3}"
-  [[ $IS_DEBUG == "true" ]] && set -x
+  [[ $DEBUG_MODE == "enabled" ]] && set -x
 
   log_file=$(get_log_file_name "${usecase}")
   id=$(hash_id "${json}" "${jsonquery}")
@@ -207,6 +211,29 @@ ingest_data_world_vaccinations() {
   end_log "${usecase}"
 }
 
+ingest_all() {
+  ingest_data
+  ingest_data_fr_hostpital
+  ingest_data_fr_hostpital_new
+  ingest_data_fr_hostpital_age
+  ingest_data_fr_hostpital_ets
+  ingest_data_fr_vaccine
+  ingest_data_world_vaccine_locations
+  ingest_data_world_vaccinations
+}
+
+ingest_daemon() {
+  if [[ $DAEMON_MODE == "enabled" ]]; then
+    echo "Running as a deamon with WAIT_TIME=${WAIT_TIME}"
+    while true; do
+      eval "${1}"
+      sleep "${WAIT_TIME}"
+    done
+  else
+    ingest_all
+  fi
+}
+
 [[ $# -lt 1 ]] && error
 
 if [[ $ELASTIC_URL == "changeit" || $ELASTIC_USERNAME == "changeit" || $ELASTIC_PASSWORD == "changeit" ]]; then
@@ -214,30 +241,22 @@ if [[ $ELASTIC_URL == "changeit" || $ELASTIC_USERNAME == "changeit" || $ELASTIC_
   exit 1
 fi
 
-options=$(getopt -o a,h,s,d -l help,debug,all,ingest-data,ingest-data-fr-hospital,ingest-data-fr-hospital-new,ingest-data-fr-hospital-age,ingest-data-fr-hospital-ets,ingest-data-fr-vaccine,ingest-data-world-vaccine-locations,ingest-data-world-vaccinations -- "$@")
+options=$(getopt -o a,h,s,d -l help,debug,daemon-mode,all,ingest-data,ingest-data-fr-hospital,ingest-data-fr-hospital-new,ingest-data-fr-hospital-age,ingest-data-fr-hospital-ets,ingest-data-fr-vaccine,ingest-data-world-vaccine-locations,ingest-data-world-vaccinations -- "$@")
 set -- $options 
 while true; do 
   case "$1" in 
     -h|--help) usage ; shift ;;
-    -d|--debug) IS_DEBUG="true" ; shift ;;
-    --ingest-data) ingest_data ; shift ;;
-    --ingest-data-fr-hospital) ingest_data_fr_hostpital ; shift ;;
-    --ingest-data-fr-hospital-new) ingest_data_fr_hostpital_new ; shift ;;
-    --ingest-data-fr-hospital-age) ingest_data_fr_hostpital_age ; shift ;;
-    --ingest-data-fr-hospital-ets) ingest_data_fr_hostpital_ets ; shift ;;
-    --ingest-data-fr-vaccine) ingest_data_fr_vaccine ; shift ;;
-    --ingest-data-world-vaccine-locations) ingest_data_world_vaccine_locations ; shift ;;
-    --ingest-data-world-vaccinations) ingest_data_world_vaccinations ; shift ;;
-    -a|--all) 
-      ingest_data
-      ingest_data_fr_hostpital
-      ingest_data_fr_hostpital_new
-      ingest_data_fr_hostpital_age
-      ingest_data_fr_hostpital_ets
-      ingest_data_fr_vaccine
-      ingest_data_world_vaccine_locations
-      ingest_data_world_vaccinations
-      shift ;;
+    -d|--debug) DEBUG_MODE="enabled" ; shift ;;
+    --daemon-mode) DAEMON_MODE="enabled" ; shift ;;
+    --ingest-data) ingest_daemon "ingest_data" ; shift ;;
+    --ingest-data-fr-hospital) ingest_daemon "ingest_data_fr_hostpital" ; shift ;;
+    --ingest-data-fr-hospital-new) ingest_daemon "ingest_data_fr_hostpital_new" ; shift ;;
+    --ingest-data-fr-hospital-age) ingest_daemon "ingest_data_fr_hostpital_age" ; shift ;;
+    --ingest-data-fr-hospital-ets) ingest_daemon "ingest_data_fr_hostpital_ets" ; shift ;;
+    --ingest-data-fr-vaccine) ingest_daemon "ingest_data_fr_vaccine" ; shift ;;
+    --ingest-data-world-vaccine-locations) ingest_daemon "ingest_data_world_vaccine_locations" ; shift ;;
+    --ingest-data-world-vaccinations) ingest_daemon "ingest_data_world_vaccinations" ; shift ;;
+    -a|--all) ingest_daemon "ingest_all" ; shift ;;
     --) shift ; break ;; 
     *) error ; shift ;;
   esac 
