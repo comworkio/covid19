@@ -1,0 +1,13 @@
+version: "3.3"
+
+services:
+  covid-stats-x86:
+    image: comworkio/covid-stats
+    build:
+      context: .
+      dockerfile: Dockerfile
+  covid-stats-arm:
+    image: comworkio/covid-stats
+    build:
+      context: .
+      dockerfile: Dockerfile.arm
