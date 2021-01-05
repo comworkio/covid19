@@ -241,6 +241,11 @@ if [[ $ELASTIC_URL == "changeit" || $ELASTIC_USERNAME == "changeit" || $ELASTIC_
   exit 1
 fi
 
+if [[ ! $WAIT_TIME =~ ^[0-9]+ ]]; then
+  echo "You need to override WAIT_TIME with a numeric value" >&2
+  exit 1
+fi
+
 options=$(getopt -o a,h,s,d -l help,debug,daemon-mode,all,ingest-data,ingest-data-fr-hospital,ingest-data-fr-hospital-new,ingest-data-fr-hospital-age,ingest-data-fr-hospital-ets,ingest-data-fr-vaccine,ingest-data-world-vaccine-locations,ingest-data-world-vaccinations -- "$@")
 set -- $options 
 while true; do 
