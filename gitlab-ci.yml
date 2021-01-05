@@ -1,0 +1,22 @@
+stages:
+  - publish
+
+covid-stats-x86:
+  stage: publish
+  script:
+    - setsid ./ci/docker-deliver.sh "x86" "covid-stats" "1.0"
+  only:
+    refs:
+      - /^(master.*)$/
+  tags:
+    - covid19
+
+covid-stats-arm:
+  stage: publish
+  script:
+    - setsid ./ci/docker-deliver.sh "arm" "covid-stats" "1.0"
+  only:
+    refs:
+      - /^(master.*)$/
+  tags:
+    - buildarm

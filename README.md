@@ -9,6 +9,11 @@ Then you'll be able to make some dashboards and graphs on [Kibana](https://www.e
 * Github mirror repo: https://github.com/idrissneumann/covid19
 ## Getting started
 
+### With docker
+
+Todo
+### Without docker
+
 **0/** you need to install the following dependancies:
 
 * bash >= 4

@@ -1,0 +1,12 @@
+FROM balenalib/raspberrypi3-debian:latest
+
+ENV DAEMON_MODE=enabled \
+    CONTAINER_MODE=enabled
+
+COPY ./get_stats.sh /
+
+RUN apt-get update -y && \
+    apt-get install curl bash jq -y && \
+    chmod +x /get_stats.sh
+
+CMD ["/get_stats.sh -a"]
