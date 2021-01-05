@@ -9,10 +9,31 @@ Then you'll be able to make some dashboards and graphs on [Kibana](https://www.e
 * Github mirror repo: https://github.com/idrissneumann/covid19
 ## Getting started
 
-### With docker
+### With oci / docker containers
 
-Todo
-### Without docker
+A docker image is delivered on docker-hub for `x86` and `arm` achitecture here: https://hub.docker.com/repository/docker/comworkio/covid-stats
+
+You can use the following tags for x86:
+
+```shell
+docker pull comworkio/covid19-stats:latest # x86
+docker pull comworkio/covid19-stats:latest-x86 # x86
+docker pull comworkio/covid19-stats:1.0 # x86
+docker pull comworkio/covid19-stats:1.0-{sha} # x86
+```
+
+You can use the following tags for arm:
+
+```shell
+docker pull comworkio/covid19-stats:latest-arm # x86
+docker pull comworkio/covid19-stats:1.0-arm # x86
+docker pull comworkio/covid19-stats:1.0-{sha}-arm # x86
+```
+
+Those tags are built and optimized for raspberrypi.
+
+A docker-compose file for each architecture, with the minimal stack will be delivered soon.
+### Without oci / docker containers
 
 **0/** you need to install the following dependancies:
 
