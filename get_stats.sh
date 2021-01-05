@@ -16,6 +16,7 @@ DATA_VACCINE_WORLD_VACCINATIONS="https://raw.githubusercontent.com/owid/covid-19
 [[ ! $DEBUG_MODE ]] && export DEBUG_MODE="disabled"
 [[ ! $DAEMON_MODE ]] && export DAEMON_MODE="disabled"
 [[ ! $CONTAINER_MODE ]] && export CONTAINER_MODE="disabled"
+[[ ! $ELASTIC_AUTHENTICATION ]] && ELASTIC_AUTHENTICATION="enabled"
 
 error() {
   echo "Error: invalid parameter !" >&2
@@ -29,6 +30,7 @@ usage() {
   echo "-a or --all: ingest all data"
   echo "-d or --debug: enable debug traces (override the DEBUG_MODE env variable)"
   echo "--daemon-mode: enable daemon mode (override the DAEMON_MODE env variable)"
+  echo "--disable-auth: disable the authentication to ElasticSearch"
   echo "--ingest-data: ingest data from www.coronavirus-statistiques.com"
   echo "--ingest-data-fr-hospital: ingest data from france with www.data.gouv.fr"
   echo "--ingest-data-fr-hospital-new: ingest data from france with www.data.gouv.fr, new cases"
@@ -105,11 +107,17 @@ push_document() {
 
   indice_url="${ELASTIC_URL}/$(get_indice_name "${usecase}" "${json}")/_doc/${id}"
   content_type="Content-Type: application/json"
+
+  AUTH_OPT=""
+  VERBOSE_OPT=""
+  [[ $ELASTIC_AUTHENTICATION == "enabled" ]] && AUTH_OPT="-u ${ELASTIC_USERNAME}:${ELASTIC_PASSWORD}"
+  [[ $DEBUG_MODE == "enabled" ]] && VERBOSE_OPT="-v"
+
   if [[ $(echo "${json}"|jq -r '.vdate') != "null" ]]; then
     if [[ $CONTAINER_MODE == "enabled" ]]; then
-      curl "${indice_url}" -u "${ELASTIC_USERNAME}:${ELASTIC_PASSWORD}" -X PUT -d "${json}" -H "${content_type}"
+      curl "${indice_url}" "${VERBOSE_OPT}" ${AUTH_OPT} -X PUT -d "${json}" -H "${content_type}"
     else
-      curl "${indice_url}" -u "${ELASTIC_USERNAME}:${ELASTIC_PASSWORD}" -X PUT -d "${json}" -H "${content_type}" >> "${log_file}" 2>>"${log_file}"
+      curl "${indice_url}" "${VERBOSE_OPT}" ${AUTH_OPT} -X PUT -d "${json}" -H "${content_type}" >> "${log_file}" 2>>"${log_file}"
     fi
   fi
 }
@@ -253,7 +261,7 @@ ingest_daemon() {
 
 [[ $# -lt 1 ]] && error
 
-if [[ $ELASTIC_URL == "changeit" || $ELASTIC_USERNAME == "changeit" || $ELASTIC_PASSWORD == "changeit" ]]; then
+if [[ $ELASTIC_AUTHENTICATION == "enabled" ]] && [[ $ELASTIC_URL == "changeit" || $ELASTIC_USERNAME == "changeit" || $ELASTIC_PASSWORD == "changeit" ]]; then
   echo "Error: You need to override the following variables with real values: ELASTIC_URL, ELASTIC_USERNAME and ELASTIC_PASSWORD" >&2
   exit 1
 fi
@@ -263,7 +271,7 @@ if [[ ! $WAIT_TIME =~ ^[0-9]+ ]]; then
   exit 1
 fi
 
-options=$(getopt -o a,h,s,d -l help,debug,daemon-mode,container-mode,all,ingest-data,ingest-data-fr-hospital,ingest-data-fr-hospital-new,ingest-data-fr-hospital-age,ingest-data-fr-hospital-ets,ingest-data-fr-vaccine,ingest-data-world-vaccine-locations,ingest-data-world-vaccinations -- "$@")
+options=$(getopt -o a,h,s,d -l help,debug,daemon-mode,container-mode,disable-auth,all,ingest-data,ingest-data-fr-hospital,ingest-data-fr-hospital-new,ingest-data-fr-hospital-age,ingest-data-fr-hospital-ets,ingest-data-fr-vaccine,ingest-data-world-vaccine-locations,ingest-data-world-vaccinations -- "$@")
 set -- $options 
 while true; do 
   case "$1" in 
@@ -271,6 +279,7 @@ while true; do
     -d|--debug) DEBUG_MODE="enabled" ; shift ;;
     --daemon-mode) DAEMON_MODE="enabled" ; shift ;;
     --container-mode) CONTAINER_MODE="enabled" ; shift ;;
+    --disable-auth) ELASTIC_AUTHENTICATION="disabled" ; shift ;;
     --ingest-data) ingest_daemon "ingest_data" ; shift ;;
     --ingest-data-fr-hospital) ingest_daemon "ingest_data_fr_hostpital" ; shift ;;
     --ingest-data-fr-hospital-new) ingest_daemon "ingest_data_fr_hostpital_new" ; shift ;;
