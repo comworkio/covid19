@@ -8,6 +8,9 @@ covid-stats-x86:
   only:
     refs:
       - /^(master.*)$/
+    changes:
+      - get_stats.sh
+      - Dockerfile.arm
   tags:
     - covid19
 
@@ -18,5 +21,8 @@ covid-stats-arm:
   only:
     refs:
       - /^(master.*)$/
+    changes:
+      - get_stats.sh
+      - Dockerfile.arm
   tags:
     - buildarm

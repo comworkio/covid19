@@ -16,18 +16,18 @@ A docker image is delivered on docker-hub for `x86` and `arm` achitecture here: 
 You can use the following tags for x86:
 
 ```shell
-docker pull comworkio/covid19-stats:latest # x86
-docker pull comworkio/covid19-stats:latest-x86 # x86
-docker pull comworkio/covid19-stats:1.0 # x86
-docker pull comworkio/covid19-stats:1.0-{sha} # x86
+docker pull comworkio/covid-stats:latest # x86
+docker pull comworkio/covid-stats:latest-x86 # x86
+docker pull comworkio/covid-stats:1.0 # x86
+docker pull comworkio/covid-stats:1.0-{sha} # x86
 ```
 
 You can use the following tags for arm:
 
 ```shell
-docker pull comworkio/covid19-stats:latest-arm # x86
-docker pull comworkio/covid19-stats:1.0-arm # x86
-docker pull comworkio/covid19-stats:1.0-{sha}-arm # x86
+docker pull comworkio/covid-stats:latest-arm # x86
+docker pull comworkio/covid-stats:1.0-arm # x86
+docker pull comworkio/covid-stats:1.0-{sha}-arm # x86
 ```
 
 Those tags are built and optimized for raspberrypi.
