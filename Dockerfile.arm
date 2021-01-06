@@ -9,4 +9,4 @@ RUN apt-get update -y && \
     apt-get install curl bash jq -y && \
     chmod +x /get_stats.sh
 
-CMD ["/get_stats.sh -a"]
+CMD ["/get_stats.sh", "-a"]
