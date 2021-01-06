@@ -2,9 +2,11 @@ version: "3.3"
 
 services:
   covid-stats-x86:
-    image: comworkio/covid-stats:1.1-arm
+    image: comworkio/covid-stats:1.2-arm
     environment:
       - ELASTIC_URL=http://es01:9200
+      - ELASTIC_AUTHENTICATION=disabled
+      - STARTUP_WAIT_TIME=20
     networks:
       - covid19
   es01:

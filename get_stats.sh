@@ -16,7 +16,8 @@ DATA_VACCINE_WORLD_VACCINATIONS="https://raw.githubusercontent.com/owid/covid-19
 [[ ! $DEBUG_MODE ]] && export DEBUG_MODE="disabled"
 [[ ! $DAEMON_MODE ]] && export DAEMON_MODE="disabled"
 [[ ! $CONTAINER_MODE ]] && export CONTAINER_MODE="disabled"
-[[ ! $ELASTIC_AUTHENTICATION ]] && ELASTIC_AUTHENTICATION="enabled"
+[[ ! $ELASTIC_AUTHENTICATION ]] && export ELASTIC_AUTHENTICATION="enabled"
+[[ ! $STARTUP_WAIT_TIME ]] && export STARTUP_WAIT_TIME=0
 
 error() {
   echo "Error: invalid parameter !" >&2
@@ -272,6 +273,11 @@ ingest_daemon() {
 }
 
 [[ $# -lt 1 ]] && error
+
+if [[ $STARTUP_WAIT_TIME -gt 0 ]]; then
+  echo "Wait for elasticsearch with STARTUP_WAIT_TIME=${STARTUP_WAIT_TIME}"
+  sleep "${STARTUP_WAIT_TIME}"
+fi
 
 options=$(getopt -o a,h,s,d -l help,debug,daemon-mode,container-mode,disable-auth,all,ingest-data,ingest-data-fr-hospital,ingest-data-fr-hospital-new,ingest-data-fr-hospital-age,ingest-data-fr-hospital-ets,ingest-data-fr-vaccine,ingest-data-world-vaccine-locations,ingest-data-world-vaccinations -- "$@")
 set -- $options 
