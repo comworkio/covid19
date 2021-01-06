@@ -96,7 +96,7 @@ invoke_url() {
   usecase="${2}"
   VERBOSE_OPT=""
   [[ $DEBUG_MODE == "enabled" ]] && VERBOSE_OPT="-v"
-  [[ $CONTAINER_MODE == "enabled" ]] && curl -L "${VERBOSE_OPT}" "${url}" || curl -L "${VERBOSE_OPT}" "${url}" 2>>$(get_log_file_name "${usecase}")
+  [[ $CONTAINER_MODE == "enabled" ]] && curl -L "${url}" "${VERBOSE_OPT}" || curl -L "${url}" "${VERBOSE_OPT}" 2>>$(get_log_file_name "${usecase}")
 }
 
 push_document() {
