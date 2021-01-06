@@ -11,7 +11,7 @@ services:
     networks:
       - covid19
   es01:
-    image: comworkio/elasticsearch-7.9.1-arm
+    image: comworkio/elasticsearch:7.9.1-arm
     container_name: es01
     ports:
       - 9200:9200
