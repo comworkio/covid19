@@ -96,7 +96,12 @@ invoke_url() {
   usecase="${2}"
   VERBOSE_OPT=""
   [[ $DEBUG_MODE == "enabled" ]] && VERBOSE_OPT="-v"
-  [[ $CONTAINER_MODE == "enabled" ]] && curl -L "${url}" "${VERBOSE_OPT}" || curl -L "${url}" "${VERBOSE_OPT}" 2>>$(get_log_file_name "${usecase}")
+
+  if [[ $CONTAINER_MODE == "enabled" ]]; then 
+    curl -L "${url}" ${VERBOSE_OPT}
+  else
+    curl -L "${url}" ${VERBOSE_OPT} 2>>$(get_log_file_name "${usecase}")
+  fi
 }
 
 push_document() {
@@ -118,9 +123,9 @@ push_document() {
 
   if [[ $(echo "${json}"|jq -r '.vdate') != "null" ]]; then
     if [[ $CONTAINER_MODE == "enabled" ]]; then
-      curl "${indice_url}" "${VERBOSE_OPT}" ${AUTH_OPT} -X PUT -d "${json}" -H "${content_type}"
+      curl "${indice_url}" ${VERBOSE_OPT} ${AUTH_OPT} -X PUT -d "${json}" -H "${content_type}"
     else
-      curl "${indice_url}" "${VERBOSE_OPT}" ${AUTH_OPT} -X PUT -d "${json}" -H "${content_type}" >> "${log_file}" 2>>"${log_file}"
+      curl "${indice_url}" ${VERBOSE_OPT} ${AUTH_OPT} -X PUT -d "${json}" -H "${content_type}" >> "${log_file}" 2>>"${log_file}"
     fi
   fi
 }
@@ -260,6 +265,11 @@ ingest_daemon() {
     exit 1
   fi
 
+  if [[ $STARTUP_WAIT_TIME -gt 0 ]]; then
+    echo "Wait for elasticsearch with STARTUP_WAIT_TIME=${STARTUP_WAIT_TIME}"
+    sleep "${STARTUP_WAIT_TIME}"
+  fi
+
   if [[ $DAEMON_MODE == "enabled" ]]; then
     echo "Running ${usecase} as a deamon with WAIT_TIME=${WAIT_TIME}"
     while true; do
@@ -273,11 +283,6 @@ ingest_daemon() {
 }
 
 [[ $# -lt 1 ]] && error
-
-if [[ $STARTUP_WAIT_TIME -gt 0 ]]; then
-  echo "Wait for elasticsearch with STARTUP_WAIT_TIME=${STARTUP_WAIT_TIME}"
-  sleep "${STARTUP_WAIT_TIME}"
-fi
 
 options=$(getopt -o a,h,s,d -l help,debug,daemon-mode,container-mode,disable-auth,all,ingest-data,ingest-data-fr-hospital,ingest-data-fr-hospital-new,ingest-data-fr-hospital-age,ingest-data-fr-hospital-ets,ingest-data-fr-vaccine,ingest-data-world-vaccine-locations,ingest-data-world-vaccinations -- "$@")
 set -- $options 

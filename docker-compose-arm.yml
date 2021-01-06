@@ -2,7 +2,7 @@ version: "3.3"
 
 services:
   covid-stats-x86:
-    image: comworkio/covid-stats:1.3-arm
+    image: comworkio/covid-stats:1.4-arm
     environment:
       - ELASTIC_URL=http://es01:9200
       - ELASTIC_AUTHENTICATION=disabled
@@ -11,13 +11,32 @@ services:
     networks:
       - covid19
   es01:
-    image: comworkio/elasticsearch:7.9.1-1.5-arm
+    image: comworkio/elasticsearch:7.9.1-1.6-arm
     container_name: es01
     ports:
       - 9200:9200
       - 9300:9300
     networks:
       - covid19
+    volumes:
+      - data01:/usr/share/elasticsearch/data
+  kib01:
+    image: comworkio/kibana:7.9.1-1.5-arm
+    container_name: kib01
+    ports:
+      - 5601:5601
+    environment:
+      - ES_PROTO=http
+      - ES_HOST=es01
+      - ES_PORT=9200
+    networks:
+      - covid19
+    depends_on: 
+      - es01
+
+volumes:
+  data01:
+    driver: local
 
 networks:
   covid19:
