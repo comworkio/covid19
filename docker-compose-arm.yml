@@ -1,7 +1,7 @@
 version: "3.3"
 
 services:
-  covid-stats-x86:
+  covid-stats:
     image: comworkio/covid-stats:1.4-arm
     environment:
       - ELASTIC_URL=http://es01:9200
