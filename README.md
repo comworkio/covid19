@@ -68,6 +68,8 @@ The go: http://127.0.0.1:5601
 * `gouvfr-covid19-*`
 * `vaccine-covid19-*`
 
+You also can export the saved objects [here](./kibana_saved_objects) on Kibana. You'll also have some graph and dashboards.
+
 **2/** change the three following variables in the `get_stats.sh`:
 
 ```shell
@@ -93,6 +95,8 @@ As you can see, you also can `export` them before running the script instead of 
 * `vaccine-covid19-vaccinefr-*`
 * `vaccine-covid19-vaccinations-*`
 * `vaccine-covid19-vaccinelocations-*`
+
+You also can export the saved objects [here](./kibana_saved_objects) on Kibana. You'll also have some graph and dashboards.
 
 ## Datasources
 
