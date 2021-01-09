@@ -1,0 +1,92 @@
+[
+    {
+      "from": "now/d",
+      "to": "now/d",
+      "display": "Today"
+    },
+    {
+      "from": "now/w",
+      "to": "now/w",
+      "display": "This week"
+    },
+    {
+      "from": "now-15m",
+      "to": "now",
+      "display": "Last 15 minutes"
+    },
+    {
+      "from": "now-30m",
+      "to": "now",
+      "display": "Last 30 minutes"
+    },
+    {
+      "from": "now-1h",
+      "to": "now",
+      "display": "Last 1 hour"
+    },
+    {
+      "from": "now-24h",
+      "to": "now",
+      "display": "Last 24 hours"
+    },
+    {
+      "from": "now-7d",
+      "to": "now",
+      "display": "Last 7 days"
+    },
+    {
+      "from": "now-7d",
+      "to": "now-1d",
+      "display": "Last 7 days before 1d"
+    },
+    {
+      "from": "now-7d",
+      "to": "now-2d",
+      "display": "Last 7 days before 2d"
+    },
+    {
+      "from": "now-30d",
+      "to": "now",
+      "display": "Last 30 days"
+    },
+    {
+      "from": "now-30d",
+      "to": "now-1d",
+      "display": "Last 30 days before 1d"
+    },
+    {
+      "from": "now-30d",
+      "to": "now-2d",
+      "display": "Last 30 days before 2d"
+    },
+    {
+      "from": "now-90d",
+      "to": "now",
+      "display": "Last 90 days"
+    },
+    {
+      "from": "now-90d",
+      "to": "now-1d",
+      "display": "Last 90 days before 1d"
+    },
+    {
+      "from": "now-90d",
+      "to": "now-2d",
+      "display": "Last 90 days before 2d"
+    },
+    {
+      "from": "now-1y",
+      "to": "now",
+      "display": "Last 1 year"
+    },
+    {
+      "from": "now-1y",
+      "to": "now-1d",
+      "display": "Last 1 year before 1d"
+    },
+    {
+      "from": "now-1y",
+      "to": "now-2d",
+      "display": "Last 1 year before 2d"
+    }
+  ]
