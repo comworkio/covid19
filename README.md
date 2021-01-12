@@ -11,7 +11,7 @@ Then you'll be able to make some dashboards and graphs on [Kibana](https://www.e
 
 ### Setup with RaspberryPi
 
-If you want to go with RaspberryPi instead of a x86 server, here is an example of setup that is working great.
+If you want to go with RaspberryPi instead of a x86 server, here is an example of setup that is working great:
 
 ![d8](images/8.jpg)
 
