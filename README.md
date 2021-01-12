@@ -13,11 +13,13 @@ Then you'll be able to make some dashboards and graphs on [Kibana](https://www.e
 * Github mirror repo: https://github.com/idrissneumann/covid19
 ## Getting started
 
-### Setup with RaspberryPi
+### Setup with Raspberry Pi
 
-If you want to go with RaspberryPi instead of a x86 server, here is an example of setup that is working great:
+This is the Raspberry Pi setup used by the maintener in order to build the ARM image (which is available on docker-hub) and to run it with a minimal ElasticStack which is also built for ARM (see [this repo](https://gitlab.comwork.io/oss/elasticstack/elasticstack-arm)).
 
 ![d8](images/8.jpg)
+
+If you have two Raspberry Pi 4 model B, 4gb or raspberry Pi 400 instead, with one hosting ElasticSearch and the other Kibana, it should be fine. You'll just have to change the Kibana environment variable `ES_HOST` in the docker-compose file to replace the elastic hostname by the ip on the network. See the section below in order to get more details.
 
 ### With docker
 
