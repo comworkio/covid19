@@ -9,6 +9,12 @@ Then you'll be able to make some dashboards and graphs on [Kibana](https://www.e
 * Github mirror repo: https://github.com/idrissneumann/covid19
 ## Getting started
 
+### Setup with RaspberryPi
+
+If you want to go with RaspberryPi instead of a x86 server, here is an example of setup that is working great.
+
+![d8](images/8.jpg)
+
 ### With docker
 
 A docker image is delivered on docker-hub for `x86` and `arm` achitecture here: https://hub.docker.com/repository/docker/comworkio/covid-stats
