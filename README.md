@@ -141,3 +141,11 @@ All the data are converted to a JSON document that will be indexed and contains 
 Here we subtract between the cumulative amounts of the day and the day before in order to obtain the number of new cases per day:
 
 ![v6](images/6.jpg)
+
+The timelion expression:
+
+```shell
+.es(index=covid19-*, q='vplace.keyword: "france"', metric=sum:vcases, timefield='vdate').subtract(.es(index=covid19-*, q='vplace.keyword: "france"', metric=sum:vcases, timefield='vdate', offset='-1d')).label(vcases).color(blue), .es(index=covid19-*, q='vplace.keyword: "france"', metric=sum:vdeath, timefield='vdate').subtract(.es(index=covid19-*, q='vplace.keyword: "france"', metric=sum:vdeath, timefield='vdate', offset='-1d')).label(vdeath).color(red), .es(index=covid19-*, q='vplace.keyword: "france"', metric=sum:vrecover, timefield='vdate').subtract(.es(index=covid19-*, q='vplace.keyword: "france"', metric=sum:vrecover, timefield='vdate', offset='-1d')).label(vrecover).color(green)
+```
+
+Replace `france` by any country you want and which are available in the dataset.
