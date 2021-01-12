@@ -3,6 +3,10 @@
 This project aims to provide some script that will allow you to index some covid19 opendata into [ElasticSearch](https://www.elastic.co/elasticsearch).
 
 Then you'll be able to make some dashboards and graphs on [Kibana](https://www.elastic.co/kibana) or [Grafana](https://grafana.com).
+
+## Table of content
+
+[[_TOC_]]
 ## Git repo
 
 * Main repo: https://gitlab.comwork.io/oss/covid19
