@@ -54,14 +54,16 @@ Pick the docker-compose file corresponding to your own architecture:
 
 Refer to the "Without docker" section in order to pick the same index patterns configurations (point **4**).
 
-The try:
+If you want to host all containers in the same host:
 
 ```shell
 $ docker-compose -f docker-compose-x86.yml up -d # on x86
 $ docker-compose -f docker-compose-arm.yml up -d # on arm
 ```
 
-The go: http://127.0.0.1:5601
+If you want to use multiple host on different docker-network, you'll have to adapt those files (changing the environment variables, removing the docker network, etc).
+
+Then you can access to Kibana on your browser using this url: `http://{ip of the server hosting Kibana}:5601`.
 
 ### Without docker
 
