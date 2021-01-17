@@ -4,25 +4,27 @@ stages:
 covid-stats-x86:
   stage: publish
   script:
-    - setsid ./ci/docker-deliver.sh "x86" "covid-stats" "1.4"
+    - setsid ./ci/docker-deliver.sh "x86" "covid-stats" "1.5"
   only:
     refs:
       - /^(master.*)$/
     changes:
       - get_stats.sh
       - Dockerfile
+      - .gitlab-ci.yml
   tags:
     - covid19
 
 covid-stats-arm:
   stage: publish
   script:
-    - setsid ./ci/docker-deliver.sh "arm" "covid-stats" "1.4"
+    - setsid ./ci/docker-deliver.sh "arm" "covid-stats" "1.5"
   only:
     refs:
       - /^(master.*)$/
     changes:
       - get_stats.sh
       - Dockerfile.arm
+      - .gitlab-ci.yml
   tags:
     - buildarm
