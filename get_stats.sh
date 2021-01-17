@@ -218,7 +218,7 @@ ingest_data_world_vaccine_locations() {
   line=0
   usecase="vaccinelocations"
   start_log "${usecase}"
-  invoke_url "${DATA_VACCINE_WORLD_LOCATIONS}" "${usecase}"|while IFS=',' read vplace viso vsource vurl vvaccines vdate trash; do
+  invoke_url "${DATA_VACCINE_WORLD_LOCATIONS}" "${usecase}"|while IFS=',' read vplace viso vvaccines vdate vsource vurl trash; do
     if [[ $line -gt 0 ]]; then
       json="{\"vdate\":\"$(format $vdate)\",\"vplace\":\"$(format $vplace)\",\"viso\":\"$(format $viso)\",\"vvaccines\":\"$(format $vvaccines)\",\"vsource\":\"$(format $vsource)\",\"vurl\":\"$(format $vurl)\"}"
       push_document "${json}" '.vdate+.vplace+.vsource' "${usecase}"
