@@ -157,3 +157,7 @@ The timelion expression:
 ```
 
 Replace `france` by any country you want and which are available in the dataset.
+
+## Talks slides
+
+You'll find some slides presented during some online meetup like the ElasticFR meetup [here](./talks)
