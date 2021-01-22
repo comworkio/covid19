@@ -19,7 +19,7 @@ Then you'll be able to make some dashboards and graphs on [Kibana](https://www.e
 [![](http://img.youtube.com/vi/BC1iSnoe15k/0.jpg)](http://www.youtube.com/watch?v=BC1iSnoe15k "")
 
 
-You'll find some slides presented during some online meetup like the ElasticFR meetup [here](./talks/elasticfr_meetup.pdf)
+[The slides are here](./talks/elasticfr_meetup.pdf)
 ## Getting started
 
 ### Setup with Raspberry Pi
