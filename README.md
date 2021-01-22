@@ -11,6 +11,15 @@ Then you'll be able to make some dashboards and graphs on [Kibana](https://www.e
 
 * Main repo: https://gitlab.comwork.io/oss/covid19
 * Github mirror repo: https://github.com/idrissneumann/covid19
+
+## Talks / demos
+
+### ElasticFr Meetup 21/08/2021 (in French)
+
+[![](http://img.youtube.com/vi/BC1iSnoe15k/0.jpg)](http://www.youtube.com/watch?v=BC1iSnoe15k "")
+
+
+You'll find some slides presented during some online meetup like the ElasticFR meetup [here](./talks/elasticfr_meetup.pdf)
 ## Getting started
 
 ### Setup with Raspberry Pi
@@ -157,12 +166,3 @@ The timelion expression:
 ```
 
 Replace `france` by any country you want and which are available in the dataset.
-
-## Talks
-
-### ElasticFr Meetup 21/08/2021 (in French)
-
-[![](http://img.youtube.com/vi/BC1iSnoe15k/0.jpg)](http://www.youtube.com/watch?v=BC1iSnoe15k "")
-
-
-You'll find some slides presented during some online meetup like the ElasticFR meetup [here](./talks/elasticfr_meetup.pdf)
