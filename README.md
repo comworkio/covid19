@@ -16,8 +16,7 @@ Then you'll be able to make some dashboards and graphs on [Kibana](https://www.e
 
 ### ElasticFr Meetup 21/08/2021 (in French)
 
-[![](http://img.youtube.com/vi/BC1iSnoe15k/0.jpg)](http://www.youtube.com/watch?v=BC1iSnoe15k "")
-
+[Here's a demo on youtube](https://youtu.be/BC1iSnoe15k)
 
 [The slides are here](./talks/elasticfr_meetup.pdf)
 ## Getting started
