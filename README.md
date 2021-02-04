@@ -10,7 +10,8 @@ Then you'll be able to make some dashboards and graphs on [Kibana](https://www.e
 ## Git repo
 
 * Main repo: https://gitlab.comwork.io/oss/covid19
-* Github mirror repo: https://github.com/idrissneumann/covid19
+* Github mirror backup: https://github.com/idrissneumann/covid19
+* Gitlab mirror backup: https://gitlab.com/ineumann/covid19
 
 ## Talks / demos
 
