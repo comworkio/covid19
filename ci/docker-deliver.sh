@@ -17,7 +17,7 @@ cd "${REPO_PATH}" && git pull origin master || :
 
 COMPOSE_DOCKER_CLI_BUILD=1 DOCKER_BUILDKIT=1 docker-compose -f docker-compose-build.yml build "${IMAGE}-${ARCH}"
 
-echo "${DOCKER_ACCESS_TOKEN}" | docker login --username comworkio --password-stdin
+echo "${DOCKER_ACCESS_TOKEN}" | docker login --username "${DOCKER_USERNAME}" --password-stdin
 
 if [[ $ARCH == "x86" ]]; then
   docker-compose -f docker-compose-build.yml push "${IMAGE}-${ARCH}"
