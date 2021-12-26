@@ -1,5 +1,16 @@
 stages:
+  - mirror
   - publish
+
+mirror:
+  stage: publish
+  script:
+    - setsid ./ci/mirror.sh
+  only:
+    refs:
+      - /^(master.*)$/
+  tags:
+    - mirror
 
 covid-stats-x86:
   stage: publish
@@ -13,7 +24,7 @@ covid-stats-x86:
       - Dockerfile
       - .gitlab-ci.yml
   tags:
-    - mirror
+    - imagesbuilder
 
 covid-stats-arm:
   stage: publish
