@@ -21,7 +21,7 @@ covid-stats-x86:
     refs:
       - /^(master.*)$/
     changes:
-      - ./ci/*
+      - ./ci/**/*
       - get_stats.sh
       - Dockerfile
       - .gitlab-ci.yml
@@ -36,7 +36,7 @@ covid-stats-arm:
     refs:
       - /^(master.*)$/
     changes:
-      - ./ci/*
+      - ./ci/**/*
       - get_stats.sh
       - Dockerfile.arm
       - .gitlab-ci.yml
@@ -51,7 +51,7 @@ deploy:
     refs:
       - /^(master.*)$/
     changes:
-      - ./ci/*
+      - ./ci/**/*
       - get_stats.sh
       - Dockerfile.arm
       - .gitlab-ci.yml
