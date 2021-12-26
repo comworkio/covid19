@@ -21,6 +21,7 @@ echo "${DOCKER_ACCESS_TOKEN}" | docker login --username "${DOCKER_USERNAME}" --p
 
 if [[ $ARCH == "x86" ]]; then
   docker-compose -f docker-compose-build.yml push "${IMAGE}-${ARCH}"
+  tag_and_push "latest"
   tag_and_push "${VERSION}"
   tag_and_push "${VERSION}-${CI_COMMIT_SHORT_SHA}"
 fi
