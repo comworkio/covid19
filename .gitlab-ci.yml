@@ -13,7 +13,7 @@ covid-stats-x86:
       - Dockerfile
       - .gitlab-ci.yml
   tags:
-    - covid19
+    - mirror
 
 covid-stats-arm:
   stage: publish
