@@ -1,0 +1,7 @@
+version: "3.3"
+
+services:
+  covid-stats:
+    image: comworkio/covid-stats:latest
+    env_file:
+      - .env

@@ -1,6 +1,7 @@
 stages:
   - mirror
   - publish
+  - deploy
 
 mirror:
   stage: mirror
@@ -39,3 +40,18 @@ covid-stats-arm:
       - .gitlab-ci.yml
   tags:
     - buildarm
+
+deploy:
+  stage: deploy
+  script:
+    - setsid ./ci/deploy.sh
+  only:
+    refs:
+      - /^(master.*)$/
+    changes:
+      - get_stats.sh
+      - Dockerfile.arm
+      - .gitlab-ci.yml
+      - ./ci/deploy.sh
+  tags:
+    - covid19
