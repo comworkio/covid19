@@ -49,9 +49,9 @@ deploy:
     refs:
       - /^(master.*)$/
     changes:
+      - ./ci/deploy.sh
       - get_stats.sh
       - Dockerfile.arm
       - .gitlab-ci.yml
-      - ./ci/deploy.sh
   tags:
     - covid19
