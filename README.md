@@ -13,6 +13,7 @@ Then you'll be able to make some dashboards and graphs on [Kibana](https://www.e
 * Github mirror backup: https://github.com/idrissneumann/covid19
 * Gitlab mirror backup: https://gitlab.com/ineumann/covid19
 * Bitbucket mirror backup: https://bitbucket.org/idrissneumann/covid19
+* Froggit mirror backup: https://lab.frogg.it/ineumann/covid19
 
 ## Talks / demos
 
